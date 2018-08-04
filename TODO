@@ -1,0 +1,36 @@
+TODO List
+---------
+
+Boundary:
+* portability
+* small size
+
+Goal:
+* provide a way for emacs compatibility
+* support cross compilation
+
+0. Read the codes and understand the design
+
+1. Restore traditional emacs key cuts
+
+2. Support Ctrl-Z to put uemacs to background
+
+3. XON/XOFF flow control is deliberately enabled, should we disable it?
+
+   My answer is YES. Do it. And test it on linux where XON/XOFF flow control
+   is turned on.
+
+4. [RESOLVED] Ctrl + S (forwsearch) does not work on Mac
+
+   This is because Mac by default set 'ixon -ixoff', so Ctrl-S does not stop
+   the termimal but also is captured by the device driver. `stty -ixon' will
+   make things work.
+
+5. [RESOLVED] Even if XONXOFF macro is defined to 1, Ctrl-S still has no effect in em.
+
+   As '-DPOSIX' is supplied when building for Darwin, Linux and FreeBSD, it is
+   ttopen function in posix.c file that has effect. But it does not check XONXOFF
+   macro.
+
+   To fix this problem, modify the ttopen function in posix.c to also consider
+   XONXOFF.
