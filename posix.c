@@ -60,6 +60,10 @@ void ttopen(void)
 	ntermios.c_iflag &= ~(IGNBRK | BRKINT | IGNPAR | PARMRK
 			      | INPCK | INLCR | IGNCR | ICRNL);
 
+#if XONXOFF
+	ntermios.c_iflag &= ~(IXON | IXOFF);
+#endif
+
 	/* raw CR/NR etc output handling */
 	ntermios.c_oflag &=
 	    ~(OPOST | ONLCR | OLCUC | OCRNL | ONOCR | ONLRET);
