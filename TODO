@@ -6,6 +6,7 @@ Boundary:
 * small size
 
 Goal:
+* learn from the current codes
 * provide a way for emacs compatibility
 * support cross compilation
 
@@ -15,10 +16,12 @@ Goal:
 
 2. Support Ctrl-Z to put uemacs to background
 
-3. XON/XOFF flow control is deliberately enabled, should we disable it?
+   terminal attributes?
 
-   My answer is YES. Do it. And test it on linux where XON/XOFF flow control
-   is turned on.
+3. [RESOLVED] XON/XOFF flow control is deliberately enabled, should we disable it?
+
+   My answer is YES. Do it. And test it on linux and mac where XON/XOFF flow
+   control is usually turned on by default.
 
 4. [RESOLVED] Ctrl + S (forwsearch) does not work on Mac
 
