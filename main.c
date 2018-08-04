@@ -62,6 +62,8 @@
 #include "ebind.h"   /* Default key bindings. */
 #include "version.h"
 
+#include "debug.h"
+
 /* For MSDOS, increase the default stack space. */
 #if MSDOS & TURBO
 #if PKCODE
@@ -309,7 +311,7 @@ int main(int argc, char **argv)
 	saveflag = lastflag;  /* Preserve lastflag through this. */
 	execute(META | SPEC | 'C', FALSE, 1);
 	lastflag = saveflag;
-
+	debug("/tmp/em-main.log", "get input: %d\n", c);
 #if TYPEAH && PKCODE
 	if (typahead()) {
 		newc = getcmd();
