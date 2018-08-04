@@ -167,7 +167,11 @@
 
 #else
 
-#define	XONXOFF	(UNIX | VMS)
+#if defined(__linux__) || defined(_DARWIN_C_SOURCE)
+#define XONXOFF 1
+#else
+#define XONXOFF (UNIX | VMS)
+#endif
 #define	NATIONL	(UNIX | VMS)
 
 #endif /* Autoconf. */
