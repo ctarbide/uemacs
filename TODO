@@ -37,3 +37,5 @@ Goal:
 
    To fix this problem, modify the ttopen function in posix.c to also consider
    XONXOFF.
+
+6. Chinese input has some problem about the cursor location.
