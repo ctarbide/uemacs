@@ -123,6 +123,7 @@ int bktoshell(int f, int n)
 void rtfrmshell(void)
 {
 	TTopen();
+	TTkopen();
 	curwp->w_flag = WFHARD;
 	sgarbf = TRUE;
 }
