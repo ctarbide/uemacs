@@ -2,12 +2,14 @@
 #include <stdarg.h>
 #include <unistd.h>
 
+#include "estruct.h"
 #include "debug.h"
 
 void debug(const char *fn, const char *fmt, ...)
 {
 	int c;		/* current char in format string */
 	FILE *f;
+	int v;
 	va_list ap;
 
 	f = fopen(fn, "a");
@@ -22,7 +24,16 @@ void debug(const char *fn, const char *fmt, ...)
 			c = *fmt++;
 			switch (c) {
 			case 'd':
-				fprintf(f, "%d", va_arg(ap, int));
+				v = va_arg(ap, int);
+				fprintf(f, "0x%x", v);
+				if (v >= (CONTROL + 0x20) && v <= (CONTROL + 0x7e))
+					fprintf(f, " (CONTROL + '%c')", v - CONTROL);
+				else if (v >= (META + 0x20) && v <= (META + 0x7e))
+					fprintf(f, " (META + '%c')", v - META);
+				else if (v >= (CTLX + CONTROL + 0x20) &&  v <= (CTLX + CONTROL + 0x7e))
+					 fprintf(f, " (CTLX | CONTROL | '%c')", v - CTLX - CONTROL);
+				else if (v >= (META + CONTROL + 0x20) &&  v <= (META + CONTROL + 0x7e))
+					 fprintf(f, " (META | CONTROL | '%c')", v - META - CONTROL);
 				break;
 
 			case 's':
