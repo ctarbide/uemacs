@@ -40,9 +40,10 @@ Goal:
 
 6. Chinese input has some problem about the cursor location.
 
-7. Support suspend/resume in Linux and Mac.
+7. [RESOLVED] Support suspend/resume in Linux and Mac.
 
    Need to understand how terminal contents are stored and recovered so that
    when suspended, the contents on the original terminal are correctly restored.
 
    Really need to grab some knowledge about term info database and the the ncurses lib.
+   Add a TTkopen in rtfrmshell, and things work.
