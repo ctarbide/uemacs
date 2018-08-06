@@ -17,6 +17,12 @@
  * control-X commands.
  */
 struct key_tab keytab[NBINDS] = {
+	{CONTROL | ' ', setmark}
+	,
+#if defined(_DARWIN_C_SOURCE)
+	{CONTROL | '@', setmark}
+	,
+#endif
 	{CONTROL | 'A', gotobol}
 	,
 	{CONTROL | 'B', backchar}
