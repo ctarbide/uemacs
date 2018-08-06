@@ -67,7 +67,7 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{CONTROL | 'Y', yank}
 	,
-	{CONTROL | 'Z', backpage}
+	{CONTROL | 'Z', bktoshell}
 	,
 	{CONTROL | ']', metafn}
 	,
@@ -154,7 +154,7 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{CTLX | 'C', spawncli}
 	,
-#if	BSD | __hpux | SVR4
+#if	BSD | __hpux | SVR4 | SYSV
 	{CTLX | 'D', bktoshell}
 	,
 #endif

@@ -31,6 +31,8 @@
 #define XCASE 0000004
 #endif
 
+extern void rtfrmshell(void);	        /* return from suspended shell */
+
 static int kbdflgs;			/* saved keyboard fd flags      */
 static int kbdpoll;			/* in O_NDELAY mode             */
 
@@ -40,6 +42,10 @@ static struct termios ntermios;		/* charactoristics to use inside */
 #define TBUFSIZ 128
 static char tobuf[TBUFSIZ];		/* terminal output buffer */
 
+static void sigcont_handler(int sig)
+{
+	rtfrmshell();
+}
 
 /*
  * This function is called once to set up the terminal device streams.
@@ -86,6 +92,8 @@ void ttopen(void)
 
 	kbdflgs = fcntl(0, F_GETFL, 0);
 	kbdpoll = FALSE;
+
+	signal(SIGCONT, sigcont_handler);
 
 	/* on all screens we are not sure of the initial position
 	   of the cursor                                        */
