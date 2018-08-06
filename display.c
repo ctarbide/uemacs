@@ -624,7 +624,7 @@ void updgar(void)
 	}
 
 	movecursor(0, 0);	/* Erase the screen. */
-	(*term.t_eeop) ();
+	TTeeop();
 	sgarbf = FALSE;		/* Erase-page clears */
 	mpresf = FALSE;		/* the message area. */
 #if	COLOR
