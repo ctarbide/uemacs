@@ -1,4 +1,10 @@
 =>                      uEmacs/PK 4.0 HELP INDEX
+***************************************************************************
+* I customized keys.                                                      *
+* e.g. ^X ^D(S) means either ^X ^D or ^X ^S will do.                      *
+*      (*) after a key binding means the key binding is not effective.    *
+***************************************************************************
+
 .. The very basics
 .. Cursor movement
 .. File commands
@@ -32,7 +38,7 @@ Previous word ......... Meta  B         Next word ............. Meta  F
 Beginning of line .....      ^A         End of line ...........      ^E
 Previous line .........      ^P         Next line .............      ^N
 Previous paragraph .... Meta  P         Next paragraph ........ Meta  N
-Previous page .........      ^Z         Next page .............      ^V
+Previous page ......... Meta  V         Next page .............      ^V
 Beginning of file ..... Meta  <         End of file ........... Meta  >
 -------------------------------------------------------------------------------
 =>                      FILE COMMANDS
@@ -40,9 +46,9 @@ Find file .............   ^X ^F         Quick exit ............ Meta  Z
 View file .............   ^X ^V         Exit emacs ............   ^X ^C
 Insert file ...........   ^X ^I
 Change file name ......   ^X  N         Filter buffer .........   ^X  #
-Save file .............   ^X ^D
+Save file .............   ^X ^D(S)
 Read file .............   ^X ^R
-Write file ............   ^X ^W         Execute file .......... not bound  
+Write file ............   ^X ^W         Execute file .......... not bound
 -------------------------------------------------------------------------------
 =>                      MISCELLANEOUS CHARACTER COMMANDS
 Newline ...............      ^M         Transpose characters ..      ^T
@@ -51,7 +57,7 @@ Open line .............      ^O
 Handle tab ............      ^I         Quote character .......   ^X  Q
 Insert space ..........      ^C
 Goto line ............. Meta  G         Abort command .........      ^G
-Goto matching fence ... Meta ^F
+Goto matching fence ... Meta ^F(NP)
 -------------------------------------------------------------------------------
 =>                      MODE COMMANDS
 Add mode ..............   ^X  M         Add global mode	....... Meta  M
@@ -74,7 +80,7 @@ Execute named command . Meta  X     ::  be bound to Esc.
 =>                      DELETING AND INSERTING
 Delete previous character    ^H         Delete next character .      ^D
 Delete previous word .. Meta ^H         Delete next word ...... Meta  D
-Kill to end of line ...      ^K         Set mark .............. Meta Space
+Kill to end of line ...      ^K         Set mark .............. Meta(Ctrl) Space
 Kill region ...........      ^W         Yank ..................      ^Y
 Kill paragraph ........ Meta ^W         Exchange point and mark   ^X ^X
 Delete blank lines ....   ^X ^O     ::  A region is defined as the area between
@@ -103,7 +109,7 @@ Next buffer ...........   ^X  X         Buffer position .......   ^X  =
 Select buffer .........   ^X  B         Unmark buffer ......... Meta  ~
 List buffers ..........   ^X ^B
 Delete buffer .........   ^X  K         Write message ......... not bound  
-Name buffer ........... Meta ^N         Clear message line .... not bound  
+Name buffer ........... Meta ^N(*)      Clear message line .... not bound
 Filter buffer .........   ^X  #
 Pipe command ..........   ^X  @         Execute buffer ........ not bound  
 -------------------------------------------------------------------------------
