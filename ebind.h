@@ -19,7 +19,7 @@
 struct key_tab keytab[NBINDS] = {
 	{CONTROL | ' ', setmark}
 	,
-#if defined(_DARWIN_C_SOURCE)
+#if defined(_DARWIN_C_SOURCE) || USG
 	{CONTROL | '@', setmark}
 	,
 #endif
