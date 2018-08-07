@@ -218,6 +218,12 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{META | CONTROL | 'M', delgmode}
 	,
+#if	CFENCE
+	{META | CONTROL | 'N', getfence}
+	,
+	{META | CONTROL | 'P', getfence}
+	,
+#endif
 	{META | CONTROL | 'N', namebuffer}
 	,
 	{META | CONTROL | 'R', qreplace}
