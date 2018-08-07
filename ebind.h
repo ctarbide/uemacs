@@ -307,6 +307,14 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{META | 'Z', quickexit}
 	,
+	{META | '[', gotobop}
+	,
+	{META | ']', gotoeop}
+	,
+	{META | '{', gotobop}
+	,
+	{META | '}', gotoeop}
+	,
 	{META | 0x7F, delbword}
 	,
 
