@@ -1219,7 +1219,11 @@ int istring(int f, int n)
 
 	/* ask for string to insert */
 	status =
-	    mlreplyt("String to insert<META>: ", tstring, NPAT, metac);
+#if	EMACS_COMPAT
+	  mlreplyt("String to insert<META>: ", tstring, NPAT, ctoec('\n'));
+#else
+	  mlreplyt("String to insert<META>: ", tstring, NPAT, metac);
+#endif
 	if (status != TRUE)
 		return status;
 

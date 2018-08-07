@@ -176,6 +176,7 @@
 
 #endif /* Autoconf. */
 
+#define EMACS_COMPAT 1		/* emacs comaptible key binds */
 #define	PKCODE	1      /* include my extensions P.K., define always    */
 #define	IBMCHR	MSDOS  /* use IBM PC character set P.K.                */
 #define SCROLLCODE 1   /* scrolling code P.K.                          */

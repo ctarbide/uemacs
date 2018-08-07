@@ -617,14 +617,22 @@ static int readpattern(char *prompt, char *apat, int srch)
 	strcpy(tpat, prompt);	/* copy prompt to output string */
 	strcat(tpat, " (");	/* build new prompt string */
 	expandp(&apat[0], &tpat[strlen(tpat)], NPAT / 2);	/* add old pattern */
+#if	EMACS_COMPAT
+	strcat(tpat, ")<NL>: ");
+#else
 	strcat(tpat, ")<Meta>: ");
+#endif
 
 	/* Read a pattern.  Either we get one,
 	 * or we just get the META charater, and use the previous pattern.
 	 * Then, if it's the search string, make a reversed pattern.
 	 * *Then*, make the meta-pattern, if we are defined that way.
 	 */
+#if	EMACS_COMPAT
+	if ((status = mlreplyt(tpat, tpat, NPAT, ctoec('\n'))) == TRUE) {
+#else
 	if ((status = mlreplyt(tpat, tpat, NPAT, metac)) == TRUE) {
+#endif
 		strcpy(apat, tpat);
 		if (srch) {	/* If we are doing the search string. */
 			/* Reverse string copy, and remember
