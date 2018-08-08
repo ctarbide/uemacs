@@ -48,7 +48,7 @@ Goal:
    Really need to grab some knowledge about term info database and the the ncurses lib.
    Add a TTkopen in rtfrmshell, and things work.
 
-8. Ctrl + B should provide a default buffer value? uemacs already get ^X X to do it.
+8. [RESOLVED] Ctrl + B should provide a default buffer value? uemacs already get ^X X to do it.
 
 9. Auto completion for Ctrl + B.
 
