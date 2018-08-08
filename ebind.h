@@ -282,8 +282,13 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{META | 'L', lowerword}
 	,
+#if	EMACS_COMPAT
+	{META | 'M', gotobolns}
+	,
+#else
 	{META | 'M', setgmode}
 	,
+#endif
 #if	WORDPRO
 	{META | 'N', gotoeop}
 	,

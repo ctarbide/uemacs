@@ -52,6 +52,7 @@ extern struct window *wpopup(void);  /* Pop up window creation. */
 
 /* basic.c */
 extern int gotobol(int f, int n);
+extern int gotobolns(int f, int n);
 extern int backchar(int f, int n);
 extern int gotoeol(int f, int n);
 extern int forwchar(int f, int n);

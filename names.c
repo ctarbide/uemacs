@@ -21,6 +21,7 @@ struct name_bind names[] = {
 	{"begin-macro", ctlxlp},
 	{"beginning-of-file", gotobob},
 	{"beginning-of-line", gotobol},
+	{"beginning-of-line-non-space", gotobolns},
 	{"bind-to-key", bindtokey},
 	{"buffer-position", showcpos},
 	{"case-region-lower", lowerregion},

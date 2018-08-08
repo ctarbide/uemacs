@@ -63,6 +63,26 @@ int gotobol(int f, int n)
 }
 
 /*
+ * Move the cursor to the first non-space char in the current line
+ */
+int gotobolns(int f, int n)
+{
+	int len;
+	unsigned char c;
+
+	len = llength(curwp->w_dotp);
+	curwp->w_doto = 0;
+	while(curwp->w_doto < len) {
+		c = lgetc(curwp->w_dotp, curwp->w_doto);
+		if (c != ' ' && c != '\t')
+			return TRUE;
+		forwchar(0, 1);
+	}
+
+	return TRUE;
+}
+
+/*
  * Move the cursor backwards by "n" characters. If "n" is less than zero call
  * "forwchar" to actually do the move. Otherwise compute the new cursor
  * location. Error if you try and move out of the buffer. Set the flag if the
