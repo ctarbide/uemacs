@@ -57,10 +57,19 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{CONTROL | 'Q', quote}
 	,
+#if	EMACS_COMPAT
+#if	ISRCH
+	{CONTROL | 'R', risearch}
+	,
+	{CONTROL | 'S', fisearch}
+	,
+#endif
+#else
 	{CONTROL | 'R', backsearch}
 	,
 	{CONTROL | 'S', forwsearch}
 	,
+#endif
 	{CONTROL | 'T', twiddle}
 	,
 	{CONTROL | 'U', unarg}
@@ -182,11 +191,18 @@ struct key_tab keytab[NBINDS] = {
 	{CTLX | 'Q', quote}
 	,			/* alternative  */
 #endif
+#if	EMACS_COMPAT
+	{CTLX | 'R', backsearch}
+	,
+	{CTLX | 'S', forwsearch}
+	,
+#else
 #if	ISRCH
 	{CTLX | 'R', risearch}
 	,
 	{CTLX | 'S', fisearch}
 	,
+#endif
 #endif
 	{CTLX | 'W', resize}
 	,
