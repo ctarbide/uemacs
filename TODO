@@ -38,7 +38,8 @@ Goal:
    To fix this problem, modify the ttopen function in posix.c to also consider
    XONXOFF.
 
-6. Chinese input has some problem about the cursor location.
+6. [RESOLVED] Chinese input has some problem about the cursor location.
+   I found I usually use em on yocto-based image. I don't think I need to fix this problem.
 
 7. [RESOLVED] Support suspend/resume in Linux and Mac.
 
@@ -54,4 +55,6 @@ Goal:
 
 10. Auto work completion optionally enabled by AUTOWORD macro.
 
-11. M-m move to first (non-space) char in this line
+11. [RESOLVED] M-m move to first (non-space) char in this line
+
+12. Consider implement 'undo'.
