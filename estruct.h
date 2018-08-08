@@ -418,6 +418,7 @@
 struct window {
 	struct window *w_wndp;	/* Next window                  */
 	struct buffer *w_bufp;	/* Buffer displayed in window   */
+	struct buffer *w_pbufp;	/* Previous buffer displayed in window */
 	struct line *w_linep;	/* Top line in the window       */
 	struct line *w_dotp;	/* Line containing "."          */
 	struct line *w_markp;	/* Line containing "mark"       */

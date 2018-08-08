@@ -9,12 +9,40 @@
  *	modified by Petri Kutvonen
  */
 
-#include        <stdio.h>
+#include <stdio.h>
 
 #include "estruct.h"
 #include "edef.h"
 #include "efunc.h"
 #include "line.h"
+
+/*
+ * Get the default buffer to switch to when Ctrl + B.
+ * If current window has a valid w_pbufp, use that and return.
+ * Use the nextbuffer and return.
+ */
+static struct buffer *defaultbf(void)
+{
+	struct buffer *bp;
+
+	bp = curbp->b_bufp;
+	while (bp != curbp) {
+		if (curwp->w_pbufp == NULL || curwp->w_pbufp->b_flag & BFINVS) {
+			if (bp != NULL && !(bp->b_flag & BFINVS))
+				return bp;
+		} else {
+			if (bp != NULL && bp == curwp->w_pbufp && !(bp->b_flag & BFINVS))
+				return bp;
+		}
+
+		if (bp == NULL)
+			bp = bheadp;
+		else
+			bp = bp->b_bufp;
+	}
+
+	return bp;
+}
 
 /*
  * Attach a buffer to a window. The
@@ -27,11 +55,22 @@ int usebuffer(int f, int n)
 	struct buffer *bp;
 	int s;
 	char bufn[NBUFN];
+	char msg[NSTRING];
 
-	if ((s = mlreply("Use buffer: ", bufn, NBUFN)) != TRUE)
-		return s;
+	bufn[0] = 0;
+	bufn[1] = '\n';
+	bp = defaultbf();
+	sprintf(msg, "Use buffer (default %s): ", bp->b_bname);
+	if ((s = mlreply(msg, bufn, NBUFN)) != TRUE) {
+		if (s == FALSE && bufn[0] == 0 && bufn[1] == '\n')
+			strcpy(bufn, bp->b_bname);
+		else
+			return s;
+	}
 	if ((bp = bfind(bufn, TRUE, 0)) == NULL)
 		return FALSE;
+	if (curbp == bp)
+		return TRUE;
 	return swbuffer(bp);
 }
 
@@ -88,6 +127,7 @@ int swbuffer(struct buffer *bp)
 		curbp->b_markp = curwp->w_markp;
 		curbp->b_marko = curwp->w_marko;
 	}
+	curwp->w_pbufp = curbp;
 	curbp = bp;		/* Switch.              */
 	if (curbp->b_active != TRUE) {	/* buffer not active yet */
 		/* read it in and activate it */
@@ -173,6 +213,10 @@ int zotbuf(struct buffer *bp)
 		bheadp = bp2;
 	else
 		bp1->b_bufp = bp2;
+
+	if (curwp->w_pbufp == bp)
+		curwp->w_pbufp = NULL;
+
 	free((char *) bp);	/* Release buffer block */
 	return TRUE;
 }

@@ -327,6 +327,7 @@ int splitwind(int f, int n)
 	wp = xmalloc(sizeof(struct window));
 	++curbp->b_nwnd;	/* Displayed twice.     */
 	wp->w_bufp = curbp;
+	wp->w_pbufp = curwp->w_pbufp;
 	wp->w_dotp = curwp->w_dotp;
 	wp->w_doto = curwp->w_doto;
 	wp->w_markp = curwp->w_markp;

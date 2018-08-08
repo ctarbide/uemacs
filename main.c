@@ -451,6 +451,7 @@ void edinit(char *bname)
 	curwp = wp;
 	wp->w_wndp = NULL;	/* Initialize window    */
 	wp->w_bufp = bp;
+	wp->w_pbufp = NULL;
 	bp->b_nwnd = 1;		/* Displayed.           */
 	wp->w_linep = bp->b_linep;
 	wp->w_dotp = bp->b_linep;
