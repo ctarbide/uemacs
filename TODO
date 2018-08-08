@@ -54,3 +54,4 @@ Goal:
 
 10. Auto work completion optionally enabled by AUTOWORD macro.
 
+11. M-m move to first (non-space) char in this line
