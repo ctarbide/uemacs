@@ -34,6 +34,8 @@ void debug(const char *fn, const char *fmt, ...)
 					fprintf(f, " (CTLX | CONTROL | '%c')", v - CTLX - CONTROL);
 				else if (v >= (META + CONTROL + 0x20) &&  v <= (META + CONTROL + 0x7e))
 					fprintf(f, " (META | CONTROL | '%c')", v - META - CONTROL);
+				else if (v >= (CTLX + 0x20) && v <= (CTLX + 0x7e))
+					fprintf(f, " (CTLX | '%c')", v - CTLX);
 				else if (v >= 0x20 && v <= 0x7e)
 					fprintf(f, " ('%c')", (char)v);
 				break;
