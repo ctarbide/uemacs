@@ -58,3 +58,5 @@ Goal:
 11. [RESOLVED] M-m move to first (non-space) char in this line
 
 12. Consider implement 'undo'.
+
+13. get coredump (segment fault) when setvar "&ind"
