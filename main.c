@@ -276,7 +276,7 @@ int main(int argc, char **argv)
 	/* if invoked with no other startup files,
 	   run the system startup file here */
 	if (startflag == FALSE) {
-		startup("");
+		startup("em.rc");
 		startflag = TRUE;
 	}
 	discmd = TRUE;		/* P.K. */
