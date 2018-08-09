@@ -117,6 +117,7 @@ struct name_bind names[] = {
 	{"filter-buffer", filter_buffer},
 	{"find-file", filefind},
 	{"forward-character", forwchar},
+	{"get", getvar},
 	{"goto-line", gotoline},
 #if	CFENCE
 	{"goto-matching-fence", getfence},
