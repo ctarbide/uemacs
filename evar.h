@@ -31,6 +31,7 @@ static char *envars[] = {
 	"cfname",		/* current file name */
 	"sres",			/* current screen resolution */
 	"debug",		/* macro debugging */
+	"fdebug",		/* file debugging */
 	"status",		/* returns the status of the last command */
 	"palette",		/* current palette string */
 	"asave",		/* # of chars between auto-saves */
@@ -78,36 +79,37 @@ static char *envars[] = {
 #define	EVCFNAME	8
 #define	EVSRES		9
 #define	EVDEBUG		10
-#define	EVSTATUS	11
-#define	EVPALETTE	12
-#define	EVASAVE		13
-#define	EVACOUNT	14
-#define	EVLASTKEY	15
-#define	EVCURCHAR	16
-#define	EVDISCMD	17
-#define	EVVERSION	18
-#define	EVPROGNAME	19
-#define	EVSEED		20
-#define	EVDISINP	21
-#define	EVWLINE		22
-#define EVCWLINE	23
-#define	EVTARGET	24
-#define	EVSEARCH	25
-#define	EVREPLACE	26
-#define	EVMATCH		27
-#define	EVKILL		28
-#define	EVCMODE		29
-#define	EVGMODE		30
-#define	EVTPAUSE	31
-#define	EVPENDING	32
-#define	EVLWIDTH	33
-#define	EVLINE		34
-#define	EVGFLAGS	35
-#define	EVRVAL		36
-#define EVTAB		37
-#define EVOVERLAP	38
-#define EVSCROLLCOUNT	39
-#define EVSCROLL	40
+#define EVFDEBUG	11
+#define	EVSTATUS	12
+#define	EVPALETTE	13
+#define	EVASAVE		14
+#define	EVACOUNT	15
+#define	EVLASTKEY	16
+#define	EVCURCHAR	17
+#define	EVDISCMD	18
+#define	EVVERSION	19
+#define	EVPROGNAME	20
+#define	EVSEED		21
+#define	EVDISINP	22
+#define	EVWLINE		23
+#define EVCWLINE	24
+#define	EVTARGET	25
+#define	EVSEARCH	26
+#define	EVREPLACE	27
+#define	EVMATCH		28
+#define	EVKILL		29
+#define	EVCMODE		30
+#define	EVGMODE		31
+#define	EVTPAUSE	32
+#define	EVPENDING	33
+#define	EVLWIDTH	34
+#define	EVLINE		35
+#define	EVGFLAGS	36
+#define	EVRVAL		37
+#define EVTAB		38
+#define EVOVERLAP	39
+#define EVSCROLLCOUNT	40
+#define EVSCROLL	41
 
 enum function_type {
 	NILNAMIC = 0,

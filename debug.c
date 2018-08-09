@@ -3,10 +3,12 @@
 #include <unistd.h>
 
 #include "estruct.h"
-#include "debug.h"
+#include "edef.h"
+#include "efunc.h"
 
 void debug(const char *fn, const char *fmt, ...)
 {
+	if (fdebug) {
 	int c;		/* current char in format string */
 	FILE *f;
 	int v;
@@ -52,4 +54,5 @@ void debug(const char *fn, const char *fmt, ...)
 	va_end(ap);
 
 	fclose(f);
+	}
 }

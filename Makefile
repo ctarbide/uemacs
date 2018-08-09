@@ -28,7 +28,7 @@ OBJ=ansi.o basic.o bind.o buffer.o crypt.o debug.o display.o eval.o exec.o \
 	termio.o vmsvt.o vt52.o window.o word.o names.o globals.o version.o \
 	usage.o wrapper.o utf8.o util.o
 
-HDR=debug.h ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
+HDR=ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
 
 # DO NOT ADD OR MODIFY ANY LINES ABOVE THIS -- make source creates them
 
@@ -141,7 +141,7 @@ input.o: input.c estruct.h edef.h
 isearch.o: isearch.c estruct.h edef.h
 line.o: line.c estruct.h edef.h
 lock.o: lock.c estruct.h edef.h
-main.o: main.c estruct.h efunc.h edef.h ebind.h debug.h
+main.o: main.c estruct.h efunc.h edef.h ebind.h
 pklock.o: pklock.c estruct.h
 posix.o: posix.c estruct.h utf8.h
 random.o: random.c estruct.h edef.h

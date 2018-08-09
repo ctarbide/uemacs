@@ -248,6 +248,8 @@ char *gtenv(char *vname)
 		return sres;
 	case EVDEBUG:
 		return ltos(macbug);
+	case EVFDEBUG:
+		return ltos(fdebug);
 	case EVSTATUS:
 		return ltos(cmdstatus);
 	case EVPALETTE:
@@ -621,6 +623,9 @@ int svar(struct variable_description *var, char *value)
 			break;
 		case EVDEBUG:
 			macbug = stol(value);
+			break;
+		case EVFDEBUG:
+			fdebug = stol(value);
 			break;
 		case EVSTATUS:
 			cmdstatus = stol(value);

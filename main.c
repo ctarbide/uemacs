@@ -62,8 +62,6 @@
 #include "ebind.h"   /* Default key bindings. */
 #include "version.h"
 
-#include "debug.h"
-
 /* For MSDOS, increase the default stack space. */
 #if MSDOS & TURBO
 #if PKCODE

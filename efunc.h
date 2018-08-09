@@ -364,3 +364,7 @@ extern void lckerror(char *errstr);
 /* pklock.c */
 extern char *dolock(char *fname);
 extern char *undolock(char *fname);
+
+/* debug.c */
+/* awkward way for debugging */
+extern void debug(const char *fn, const char *fmt, ...);

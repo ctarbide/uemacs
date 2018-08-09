@@ -1,2 +1,4 @@
 ;;set $debug "TRUE"
 set %v1 "FOO"
+;;set $fdebug "TRUE"
+

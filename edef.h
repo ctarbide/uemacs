@@ -75,6 +75,7 @@ extern int lastkey;		/* last keystoke                */
 extern int seed;		/* random number seed           */
 extern long envram;		/* # of bytes current in use by malloc */
 extern int macbug;		/* macro debuging flag          */
+extern int fdebug;		/* file debugging flag          */
 extern char errorm[];		/* error literal                */
 extern char truem[];		/* true literal                 */
 extern char falsem[];		/* false litereal               */
