@@ -139,6 +139,10 @@ char *token(char *src, char *tok, int size)
 	int quotef;	/* is the current string quoted? */
 	char c;	/* temporary character */
 
+	/* avoid core dump */
+	if (src == NULL)
+		return NULL;
+
 	/* first scan past any whitespace in the source string */
 	while (*src == ' ' || *src == '\t')
 		++src;
