@@ -51,7 +51,7 @@ Goal:
 
 8. [RESOLVED] Ctrl + B should provide a default buffer value? uemacs already get ^X X to do it.
 
-9. Auto completion for Ctrl + B.
+9. [RESOLVED] Auto completion for Ctrl + B.
 
 10. Auto work completion optionally enabled by AUTOWORD macro.
 
@@ -59,4 +59,4 @@ Goal:
 
 12. Consider implement 'undo'.
 
-13. get coredump (segment fault) when setvar "&ind"
+13. [RESOLVED] get coredump (segment fault) when setvar "&ind"
