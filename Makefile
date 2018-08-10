@@ -75,6 +75,7 @@ install: $(PROGRAM)
 	cp em ${BINDIR}
 	cp emacs.hlp ${LIBDIR}
 	cp emacs.rc ${LIBDIR}/.emacsrc
+	cp em.rc ${LIBDIR}/em.rc
 	chmod 755 ${BINDIR}/em
 	chmod 644 ${LIBDIR}/emacs.hlp ${LIBDIR}/.emacsrc
 
