@@ -444,7 +444,9 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 	int c;
 	int quotef;	/* are we quoting the next char? */
 #if	COMPLC
-	int ffile, ocpos, nskip = 0, didtry = 0;
+	int ffile, fbuf, ocpos = 0, nskip = 0, didtry = 0;
+	struct buffer *bp = bheadp;
+	int bfreset = TRUE;	/* buffer find reset, ocpos = cpos  */
 #if     MSDOS
 	struct ffblk ffblk;
 	char *fcp;
@@ -459,6 +461,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 		 || strcmp(prompt, "Write file: ") == 0
 		 || strcmp(prompt, "Read file: ") == 0
 		 || strcmp(prompt, "File to execute: ") == 0);
+	fbuf = (strncmp(prompt, "Use buffer", 10) == 0);
 #endif
 
 	cpos = 0;
@@ -524,6 +527,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 
 				TTflush();
 			}
+			bfreset = TRUE;
 
 		} else if (c == 0x15 && quotef == FALSE) {
 			/* C-U, kill */
@@ -540,6 +544,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 					ttcol -= 2;
 				}
 			}
+			bfreset = TRUE;
 			TTflush();
 
 #if	COMPLC
@@ -667,12 +672,71 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			rewind(tmpf);
 			unlink(tmp);
 #endif
+		} else if ((c == 0x09 || c == ' ') && quotef == FALSE
+			   && fbuf) {
+			int n;
+			int found = FALSE;
+			debug("/tmp/em-input.log", "finding buf as we got %d\n", c);
+			if (bfreset) {
+				ocpos = cpos;
+				bfreset = FALSE;
+			}
+
+			/* get buffer name matching buf */
+			buf[ocpos] = 0;
+			struct buffer *tbp; /* temp buffer point to iterate over buffer list */
+			tbp = bp->b_bufp;
+			while (tbp != bp) {
+				if (tbp != NULL && strncmp(buf, tbp->b_bname, ocpos) == 0) {
+					debug("/tmp/em-input.log", "ocpos = %d, tbp->b_bname = %s\n", ocpos, tbp->b_bname);
+					while (cpos != 0) {
+						outstring("\b \b");
+						--ttcol;
+						--cpos;
+						/*
+						if (buf[cpos] < 0x20) {
+							outstring("\b \b");
+							--ttcol;
+						}
+						if (buf[cpos] == '\n') {
+							outstring("\b\b  \b\b");
+							ttcol -= 2;
+						}
+						*/
+					}
+					TTflush();
+
+					n = 0;
+					while (tbp->b_bname[n] != 0) {
+						buf[n] = tbp->b_bname[n];
+						TTputc(tbp->b_bname[n]);
+						n++;
+					}
+					buf[n] = 0;
+					found = TRUE;
+					debug("/tmp/em-input.log", "found buf = %s\n", buf);
+				}
+				if (found) {
+					cpos = n;
+					TTflush();
+					bp = tbp;
+					break;
+				} else {
+					if (tbp == NULL)
+						tbp = bheadp;
+					else
+						tbp = tbp->b_bufp;
+				}
+			}
+
 #endif
 
 		} else if ((c == quotec || c == 0x16) && quotef == FALSE) {
 			quotef = TRUE;
+			bfreset = TRUE;
 		} else {
 			quotef = FALSE;
+			bfreset = TRUE;
 			if (cpos < nbuf - 1) {
 				buf[cpos++] = c;
 
