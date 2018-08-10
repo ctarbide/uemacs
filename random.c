@@ -714,6 +714,60 @@ int deblank(int f, int n)
 }
 
 /*
+ * Delete trailing spaces (' ' and '\t').
+ * Move dot backward to a non-space position or the beginning of line.
+ * All trailing spaces in current buffer are deleted.
+ */
+int deltspaces(int f, int n)
+{
+	int c;
+	int status;
+	int odoto;
+	struct line *odotp;
+
+	if (curbp->b_mode & MDVIEW)	/* don't allow this command if      */
+		return rdonly();	/* we are in read only mode     */
+
+	while (curwp->w_doto != 0) {
+		c = lgetc(curwp->w_dotp, curwp->w_doto);
+		if (c == 0 || c == ' ' || c == '\t') {
+		       status = backchar(0, 1);
+		       if (!status)
+			       return FALSE;
+		} else
+			break;
+	}
+	odoto = curwp->w_doto;
+	odotp = curwp->w_dotp;
+
+	/* go to begin of buffer, delete trailing space line by line */
+	gotobob(0, 0);
+	while (TRUE) {
+		gotoeol(0, 0);
+		if (llength(curwp->w_dotp) == 0)
+			goto nextline;
+		backchar(FALSE, 1);
+		c = lgetc(curwp->w_dotp, curwp->w_doto);
+		while (c == ' ' || c == '\t') {
+			forwdel(FALSE, 1);
+			backchar(FALSE, 1);
+			curbp->b_flag |= BFCHG;
+			c = lgetc(curwp->w_dotp, curwp->w_doto);
+		}
+	nextline:
+		status = forwline(0, 1);
+		if (!status)
+			break;
+	}
+
+	/* got back to the original saved position */
+	curwp->w_dotp = odotp;
+	curwp->w_doto = odoto;
+	curwp->w_flag |= WFHARD;
+	return TRUE;
+}
+
+/*
  * Insert a newline, then enough tabs and spaces to duplicate the indentation
  * of the previous line. Assumes tabs are every eight characters. Quite simple.
  * Figure out the indentation of the current line. Insert a newline by calling

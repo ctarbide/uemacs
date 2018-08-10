@@ -87,6 +87,7 @@ extern int cinsert(void);
 extern int insbrace(int n, int c);
 extern int inspound(void);
 extern int deblank(int f, int n);
+extern int deltspaces(int f, int n);
 extern int indent(int f, int n);
 extern int forwdel(int f, int n);
 extern int backdel(int f, int n);
