@@ -14,7 +14,7 @@ Goal:
 
 1. Restore traditional emacs key cuts
 
-2. Support Ctrl-Z to put uemacs to background
+2. [RESOLVED] Support Ctrl-Z to put uemacs to background
 
    terminal attributes?
 
