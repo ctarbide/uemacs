@@ -258,7 +258,7 @@ int namebuffer(int f, int n)
  * buffer that holds the list.  Next make sure at least 1
  * window is displaying the buffer list, splitting the screen
  * if this is what it takes.  Lastly, repaint all of the
- * windows that are displaying the list.  Bound to "C-X C-B". 
+ * windows that are displaying the list.  Bound to "C-X C-B".
  *
  * A numeric argument forces it to list invisible buffers as
  * well.
