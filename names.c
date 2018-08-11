@@ -10,6 +10,7 @@
 #include "efunc.h"
 #include "line.h"
 
+/* must be in alphabet order */
 struct name_bind names[] = {
 	{"abort-command", ctrlg},
 	{"add-mode", setemode},
