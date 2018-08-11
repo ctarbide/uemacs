@@ -163,18 +163,14 @@ fn_t getname(void)
 			TTflush();
 
 		} else if (c == ' ' || c == 0x1b || c == 0x09) {
-/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 			/* attempt a completion */
 			buf[cpos] = 0;	/* terminate it for us */
 			ffp = &names[0];	/* scan for matches */
 			while (ffp->n_func != NULL) {
-				if (strncmp(buf, ffp->n_name, strlen(buf))
-				    == 0) {
+				if (strncmp(buf, ffp->n_name, strlen(buf)) == 0) {
 					/* a possible match! More than one? */
-					if ((ffp + 1)->n_func == NULL ||
-					    (strncmp
-					     (buf, (ffp + 1)->n_name,
-					      strlen(buf)) != 0)) {
+					/* the check assumes funtions are sorted in alphabet order in names */
+					if ((ffp + 1)->n_func == NULL || (strncmp(buf, (ffp + 1)->n_name, strlen(buf)) != 0)) {
 						/* no...we match, print it */
 						sp = ffp->n_name + cpos;
 						while (*sp)
@@ -182,20 +178,12 @@ fn_t getname(void)
 						TTflush();
 						return ffp->n_func;
 					} else {
-/* << << << << << << << << << << << << << << << << << */
 						/* try for a partial match against the list */
 
 						/* first scan down until we no longer match the current input */
 						lffp = (ffp + 1);
-						while ((lffp +
-							1)->n_func !=
-						       NULL) {
-							if (strncmp
-							    (buf,
-							     (lffp +
-							      1)->n_name,
-							     strlen(buf))
-							    != 0)
+						while ((lffp + 1)->n_func != NULL) {
+							if (strncmp(buf, (lffp + 1)->n_name, strlen(buf)) != 0)
 								break;
 							++lffp;
 						}
@@ -203,29 +191,19 @@ fn_t getname(void)
 						/* and now, attempt to partial complete the string, char at a time */
 						while (TRUE) {
 							/* add the next char in */
-							buf[cpos] =
-							    ffp->
-							    n_name[cpos];
+							buf[cpos] = ffp->n_name[cpos];
 
 							/* scan through the candidates */
 							cffp = ffp + 1;
-							while (cffp <=
-							       lffp) {
-								if (cffp->
-								    n_name
-								    [cpos]
-								    !=
-								    buf
-								    [cpos])
+							while (cffp <= lffp) {
+								if (cffp-> n_name[cpos] != buf[cpos])
 									goto onward;
 								++cffp;
 							}
 
 							/* add the character */
-							TTputc(buf
-							       [cpos++]);
+							TTputc(buf[cpos++]);
 						}
-/* << << << << << << << << << << << << << << << << << */
 					}
 				}
 				++ffp;
@@ -235,7 +213,6 @@ fn_t getname(void)
 			TTbeep();
 		      onward:;
 			TTflush();
-/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 		} else {
 			if (cpos < NSTRING - 1 && c > ' ') {
 				buf[cpos++] = c;
