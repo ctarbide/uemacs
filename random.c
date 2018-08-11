@@ -722,6 +722,7 @@ int deltspaces(int f, int n)
 {
 	int c;
 	int status;
+	int bc;			/* backchar or not */
 	int odoto;
 	struct line *odotp;
 
@@ -729,11 +730,18 @@ int deltspaces(int f, int n)
 		return rdonly();	/* we are in read only mode     */
 
 	while (curwp->w_doto != 0) {
-		c = lgetc(curwp->w_dotp, curwp->w_doto);
-		if (c == 0 || c == ' ' || c == '\t') {
-		       status = backchar(0, 1);
-		       if (!status)
-			       return FALSE;
+		bc = TRUE;
+		for (int p = curwp->w_doto; p <= llength(curwp->w_dotp); p ++) {
+			c = lgetc(curwp->w_dotp, p-1);
+			if (c != ' ' && c != '\t') {
+				bc = FALSE;
+				break;
+			}
+		}
+		if (bc) {
+			status = backchar(0, 1);
+			if (!status)
+				return FALSE;
 		} else
 			break;
 	}
@@ -746,13 +754,14 @@ int deltspaces(int f, int n)
 		gotoeol(0, 0);
 		if (llength(curwp->w_dotp) == 0)
 			goto nextline;
-		backchar(FALSE, 1);
-		c = lgetc(curwp->w_dotp, curwp->w_doto);
+		c = lgetc(curwp->w_dotp, curwp->w_doto-1);
 		while (c == ' ' || c == '\t') {
-			forwdel(FALSE, 1);
-			backchar(FALSE, 1);
+			backdel(FALSE, 1);
 			curbp->b_flag |= BFCHG;
-			c = lgetc(curwp->w_dotp, curwp->w_doto);
+			if (curwp->w_doto == 0)
+				break;
+			else
+				c = lgetc(curwp->w_dotp, curwp->w_doto-1);
 		}
 	nextline:
 		status = forwline(0, 1);
