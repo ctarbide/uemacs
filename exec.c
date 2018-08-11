@@ -31,6 +31,8 @@ int namedcmd(int f, int n)
 		return FALSE;
 	}
 
+	/* clear the message line */
+	mlerase();
 	/* and then execute the command */
 	return kfunc(f, n);
 }

@@ -173,10 +173,11 @@ fn_t getname(void)
 					if ((ffp + 1)->n_func == NULL || (strncmp(buf, (ffp + 1)->n_name, strlen(buf)) != 0)) {
 						/* no...we match, print it */
 						sp = ffp->n_name + cpos;
-						while (*sp)
+						while (*sp) {
+							buf[cpos++] = *sp;
 							TTputc(*sp++);
+						}
 						TTflush();
-						return ffp->n_func;
 					} else {
 						/* try for a partial match against the list */
 
