@@ -60,3 +60,6 @@ Goal:
 12. Consider implement 'undo'.
 
 13. [RESOLVED] get coredump (segment fault) when setvar "&ind"
+
+14. [RESOLVED] Add 'delete-trailing-spaces' named command.
+
