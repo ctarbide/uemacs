@@ -180,20 +180,42 @@ int killbuffer(int f, int n)
 
 	bufn[0] = 0;
 	bufn[1] = '\n';
-	bp = defaultbf();
-	sprintf(msg, "Kill buffer (default %s): ", bp->b_bname);
 
+	sprintf(msg, "Kill buffer (default %s): ", curbp->b_bname);
 	if ((s = mlreply(msg, bufn, NBUFN)) != TRUE) {
 		if (s == FALSE && bufn[0] == 0 && bufn[1] == '\n')
-			strcpy(bufn, bp->b_bname);
+			strcpy(bufn, curbp->b_bname);
 		else
 			return s;
 	}
+
 	if ((bp = bfind(bufn, FALSE, 0)) == NULL)	/* Easy if unknown.     */
 		return TRUE;
 	if (bp->b_flag & BFINVS)	/* Deal with special buffers        */
 		return TRUE;	/* by doing nothing.    */
-	return zotbuf(bp);
+
+	if (bp == curbp) {
+		/* kill the current buffer */
+		struct buffer *dbp = defaultbf();
+		if (dbp == curbp) {
+			mlwrite("(Only one buffer left)");
+			return FALSE;
+		} else {
+			/* switch buffer first
+			 * if still present in some window, return FALSE
+			 * else kill it
+			 */
+			swbuffer(dbp);
+			if (bp->b_nwnd != 0) {
+				mlwrite("(still left in some window)");
+				return FALSE;
+			} else {
+				return zotbuf(bp);
+			}
+		}
+	} else {
+		return zotbuf(bp);
+	}
 }
 
 /*
