@@ -661,7 +661,6 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			}
 
 			/* get buffer name matching buf */
-			buf[ocpos] = 0;
 			struct buffer *tbp; /* temp buffer point to iterate over buffer list */
 			tbp = bp->b_bufp;
 			while (tbp != bp) {
