@@ -460,6 +460,50 @@ int insert_newline(int f, int n)
 	if (n < 0)
 		return FALSE;
 
+	/* if we are at list buffer, n == 1, and at some valid line containing buffer
+	 * we switch to that buffer
+	 */
+	if (curbp == blistp && n == 1) {
+		if (curwp->w_dotp != lforw(blistp->b_linep) && curwp->w_dotp != lforw(lforw(blistp->b_linep))) {
+			/* get the buffer name in current line */
+			int cpos = 0;
+			char bufn[NSTRING];
+			char *tbufp;
+			int c0, c1, c2;
+			while (cpos != llength(curwp->w_dotp)) {
+				if (cpos == 0 || cpos+1 >= llength(curwp->w_dotp)-1) {
+					cpos++;
+					continue;
+				}
+				c0 = lgetc(curwp->w_dotp, cpos-1);
+				c1 = lgetc(curwp->w_dotp, cpos);
+				if (c0 >= '0' && c0 <= '9' && c1 == ' ')
+					break;
+				cpos++;
+			}
+			cpos++;
+			tbufp = bufn;
+			while (cpos < llength(curwp->w_dotp)) {
+				c2 = lgetc(curwp->w_dotp, cpos);
+				if (c2 == ' ')
+					break;
+				*tbufp++ = c2;
+				cpos++;
+				if (tbufp == &bufn[NSTRING-1])
+					return FALSE;
+			}
+			*tbufp = 0;
+
+			/* switch to that buffer */
+			struct buffer *bp;
+			if ((bp = bfind(bufn, TRUE, 0)) == NULL)
+				return FALSE;
+			if (curbp == bp)
+				return TRUE;
+			return swbuffer(bp);
+		}
+	}
+
 	/* if we are in C mode and this is a default <NL> */
 	if (n == 1 && (curbp->b_mode & MDCMOD) &&
 	    curwp->w_dotp != curbp->b_linep)
