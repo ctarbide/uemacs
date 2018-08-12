@@ -439,7 +439,8 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 		 || strcmp(prompt, "Write file: ") == 0
 		 || strcmp(prompt, "Read file: ") == 0
 		 || strcmp(prompt, "File to execute: ") == 0);
-	fbuf = (strncmp(prompt, "Use buffer", 10) == 0);
+	fbuf = (strncmp(prompt, "Use buffer", 10) == 0
+		|| strncmp(prompt, "Kill buffer", 11) == 0);
 #endif
 
 	cpos = 0;
