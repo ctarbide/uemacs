@@ -176,9 +176,19 @@ int killbuffer(int f, int n)
 	struct buffer *bp;
 	int s;
 	char bufn[NBUFN];
+	char msg[NSTRING];
 
-	if ((s = mlreply("Kill buffer: ", bufn, NBUFN)) != TRUE)
-		return s;
+	bufn[0] = 0;
+	bufn[1] = '\n';
+	bp = defaultbf();
+	sprintf(msg, "Kill buffer (default %s): ", bp->b_bname);
+
+	if ((s = mlreply(msg, bufn, NBUFN)) != TRUE) {
+		if (s == FALSE && bufn[0] == 0 && bufn[1] == '\n')
+			strcpy(bufn, bp->b_bname);
+		else
+			return s;
+	}
 	if ((bp = bfind(bufn, FALSE, 0)) == NULL)	/* Easy if unknown.     */
 		return TRUE;
 	if (bp->b_flag & BFINVS)	/* Deal with special buffers        */
