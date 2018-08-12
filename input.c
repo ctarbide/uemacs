@@ -655,7 +655,6 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			   && fbuf) {
 			int n;
 			int found = FALSE;
-			debug("/tmp/em-input.log", "finding buf as we got %d\n", c);
 			if (bfreset) {
 				ocpos = cpos;
 				bfreset = FALSE;
@@ -666,8 +665,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			struct buffer *tbp; /* temp buffer point to iterate over buffer list */
 			tbp = bp->b_bufp;
 			while (tbp != bp) {
-				if (tbp != NULL && strncmp(buf, tbp->b_bname, ocpos) == 0) {
-					debug("/tmp/em-input.log", "ocpos = %d, tbp->b_bname = %s\n", ocpos, tbp->b_bname);
+				if (tbp != NULL && !(tbp->b_flag & BFINVS) && strncmp(buf, tbp->b_bname, ocpos) == 0) {
 					while (cpos != 0) {
 						outstring("\b \b");
 						--ttcol;
@@ -693,7 +691,6 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 					}
 					buf[n] = 0;
 					found = TRUE;
-					debug("/tmp/em-input.log", "found buf = %s\n", buf);
 				}
 				if (found) {
 					cpos = n;
