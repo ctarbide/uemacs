@@ -1,3 +1,16 @@
+36	store-macro
+	set %rctmp &sin $cfname "."
+	!if &equ %rctmp 0
+		!return
+	!endif
+	set %rctmp &mid $cfname &add %rctmp 1 5
+	!if &or &seq %rctmp "c" &seq %rctmp "h"
+		add-mode "cmode"
+	!endif
+!endm
+
+bind-to-key execute-macro-36	M-FNR
+
 ;;set $debug "TRUE"
 set %v1 "FOO"
 ;;set $fdebug "TRUE"
