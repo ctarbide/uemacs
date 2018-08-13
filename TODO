@@ -63,3 +63,7 @@ Goal:
 
 14. [RESOLVED] Add 'delete-trailing-spaces' named command.
 
+15. fence matching does not work 100% correctly, just test the execute function in main
+
+    use #if, #else, #endif as state changing indicator, a finite state machine algo could
+    solve this problem.
