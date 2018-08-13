@@ -1,3 +1,4 @@
+;; setup cmode automatically
 36	store-macro
 	set %rctmp &sin $cfname "."
 	!if &equ %rctmp 0
@@ -10,6 +11,9 @@
 !endm
 
 bind-to-key execute-macro-36	M-FNR
+
+;; setup tpause to a reasonable value on normal computers
+set $tpause 2000000
 
 ;;set $debug "TRUE"
 set %v1 "FOO"
