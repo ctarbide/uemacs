@@ -94,25 +94,26 @@ int backword(int f, int n)
  */
 int forwword(int f, int n)
 {
+	int skipword;
+
+#if	EMACS_COMPAT
+	skipword = FALSE;
+#else
+	skipword = TRUE;
+#endif
+
 	if (n < 0)
 		return backword(f, -n);
 	while (n--) {
-		while (inword() == TRUE) {
+		while (inword() == skipword) {
 			if (forwchar(FALSE, 1) == FALSE)
 				return FALSE;
 		}
 
-		while (inword() == FALSE) {
+		while (inword() != skipword) {
 			if (forwchar(FALSE, 1) == FALSE)
 				return FALSE;
 		}
-#if	EMACS_COMPAT
-		/* move the the first non-word char */
-		while (inword() == TRUE) {
-			if (forwchar(FALSE, 1) == FALSE)
-				return FALSE;
-		}
-#endif
 	}
 	return TRUE;
 }
