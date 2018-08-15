@@ -106,6 +106,13 @@ int forwword(int f, int n)
 			if (forwchar(FALSE, 1) == FALSE)
 				return FALSE;
 		}
+#if	EMACS_COMPAT
+		/* move the the first non-word char */
+		while (inword() == TRUE) {
+			if (forwchar(FALSE, 1) == FALSE)
+				return FALSE;
+		}
+#endif
 	}
 	return TRUE;
 }
