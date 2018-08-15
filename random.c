@@ -1372,3 +1372,24 @@ int ovstring(int f, int n)
 	while (n-- && (status = lover(tstring)));
 	return status;
 }
+
+/*
+ * add comment
+ * take effect only in cmode
+ *
+ * int f, n;		ignored arguments
+ */
+int addcomment(int f, int n)
+{
+	int status;	/* status return code */
+	char *cstr = "/*   */";
+
+	/* not in cmode, return TRUE */
+	if (!(curbp->b_mode & MDCMOD))
+		return TRUE;
+
+	if (!(status = linstr(cstr)))
+		return status;
+		
+	return backchar(FALSE, 4);
+}

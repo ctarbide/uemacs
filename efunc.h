@@ -103,6 +103,7 @@ extern int getfence(int f, int n);
 extern int fmatch(int ch);
 extern int istring(int f, int n);
 extern int ovstring(int f, int n);
+extern int addcomment(int f, int n);
 
 /* main.c */
 extern void edinit(char *bname);

@@ -264,6 +264,8 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{META | '.', setmark}
 	,
+	{META | ';', addcomment}
+	,
 	{META | '>', gotoeob}
 	,
 	{META | '<', gotobob}

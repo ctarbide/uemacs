@@ -13,6 +13,7 @@
 /* must be in alphabet order */
 struct name_bind names[] = {
 	{"abort-command", ctrlg},
+	{"add-comment", addcomment},
 	{"add-mode", setemode},
 	{"add-global-mode", setgmode},
 #if	APROP
