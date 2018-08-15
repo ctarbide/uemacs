@@ -858,9 +858,12 @@ int execfile(int f, int n)
 	int status;	/* return status of name query */
 	char fname[NSTRING];	/* name of file to execute */
 	char *fspec;		/* full file spec */
+	char msg[NSTRING];
 
+	putcbfdir(fname);
+	sprintf(msg, "File to execute: %s", fname);
 	if ((status =
-	     mlreply("File to execute: ", fname, NSTRING - 1)) != TRUE)
+	     mlreply(msg, fname, NSTRING - 1)) != TRUE)
 		return status;
 
 #if	1

@@ -208,6 +208,7 @@ extern int unmark(int f, int n);
 extern struct buffer *bfind(char *bname, int cflag, int bflag);
 
 /* file.c */
+extern void putcbfdir(char *fname);
 extern int fileread(int f, int n);
 extern int insfile(int f, int n);
 extern int filefind(int f, int n);

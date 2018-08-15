@@ -433,18 +433,23 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 	static char tmp[] = "/tmp/meXXXXXX";
 	FILE *tmpf = NULL;
 #endif
-	ffile = (strcmp(prompt, "Find file: ") == 0
-		 || strcmp(prompt, "View file: ") == 0
-		 || strcmp(prompt, "Insert file: ") == 0
-		 || strcmp(prompt, "Write file: ") == 0
-		 || strcmp(prompt, "Read file: ") == 0
-		 || strcmp(prompt, "File to execute: ") == 0);
+	ffile = (strncmp(prompt, "Find file: ", 11) == 0
+		 || strncmp(prompt, "View file: ", 11) == 0
+		 || strncmp(prompt, "Insert file: ", 13) == 0
+		 || strncmp(prompt, "Write file: ", 12) == 0
+		 || strncmp(prompt, "Read file: ", 11) == 0
+		 || strncmp(prompt, "File to execute: ", 17) == 0);
 	fbuf = (strncmp(prompt, "Use buffer", 10) == 0
 		|| strncmp(prompt, "Kill buffer", 11) == 0);
 #endif
 
 	cpos = 0;
 	quotef = FALSE;
+
+#if	COMPLC
+	if (ffile)
+		cpos = strlen(buf);
+#endif
 
 	/* prompt the user for the input string */
 	mlwrite(prompt);
@@ -529,6 +534,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 #if	COMPLC
 		} else if ((c == 0x09 || c == ' ') && quotef == FALSE
 			   && ffile) {
+			debug("/tmp/em-input.log", "file completion\n");
 			/* TAB, complete file name */
 			char ffbuf[255];
 #if	MSDOS

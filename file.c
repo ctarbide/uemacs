@@ -32,10 +32,14 @@ int fileread(int f, int n)
 {
 	int s;
 	char fname[NFILEN];
+	char msg[NSTRING];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
-	if ((s = mlreply("Read file: ", fname, NFILEN)) != TRUE)
+
+	putcbfdir(fname);
+	sprintf(msg, "Read file: %s", fname);
+	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
 		return s;
 	return readin(fname, TRUE);
 }
@@ -51,17 +55,47 @@ int insfile(int f, int n)
 {
 	int s;
 	char fname[NFILEN];
+	char msg[NSTRING];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
 	if (curbp->b_mode & MDVIEW)	/* don't allow this command if      */
 		return rdonly();	/* we are in read only mode     */
-	if ((s = mlreply("Insert file: ", fname, NFILEN)) != TRUE)
+
+	putcbfdir(fname);
+	sprintf(msg, "Insert file: %s", fname);
+	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
 		return s;
 	if ((s = ifile(fname)) != TRUE)
 		return s;
 	return reposition(TRUE, -1);
 }
+
+
+/*
+ * put the current buffer file direcory to fname
+ */
+void putcbfdir(char *fname)
+{
+#if	UNIX || USG
+	int len;	/* filename length */
+	int spos;	/* stop position of copy */
+	int i;
+
+	len = strlen(curbp->b_fname);
+	for (i = len; i > 0; i --) {
+		if (curbp->b_fname[i-1] == '/')
+			break;
+	}
+	spos = i-1;
+	if (spos >= 0) {
+		for (i = 0; i <= spos; i++)
+			fname[i] = curbp->b_fname[i];
+	}
+	fname[spos+1] = 0;
+#endif
+}
+
 
 /*
  * Select a file for editing.
@@ -76,10 +110,14 @@ int filefind(int f, int n)
 {
 	char fname[NFILEN];	/* file user wishes to find */
 	int s;		/* status return */
+	char msg[NSTRING];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
-	if ((s = mlreply("Find file: ", fname, NFILEN)) != TRUE)
+
+	putcbfdir(fname);
+	sprintf(msg, "Find file: %s", fname);
+	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
 		return s;
 	return getfile(fname, TRUE);
 }
@@ -89,10 +127,14 @@ int viewfile(int f, int n)
 	char fname[NFILEN];	/* file user wishes to find */
 	int s;		/* status return */
 	struct window *wp;	/* scan for windows that need updating */
+	char msg[NSTRING];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
-	if ((s = mlreply("View file: ", fname, NFILEN)) != TRUE)
+
+	putcbfdir(fname);
+	sprintf(msg, "View file: %s", fname);
+	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
 		return s;
 	s = getfile(fname, FALSE);
 	if (s) {		/* if we succeed, put it in view mode */
@@ -395,10 +437,14 @@ int filewrite(int f, int n)
 	struct window *wp;
 	int s;
 	char fname[NFILEN];
+	char msg[NSTRING];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
-	if ((s = mlreply("Write file: ", fname, NFILEN)) != TRUE)
+
+	putcbfdir(fname);
+	sprintf(msg, "Write file: %s", fname);
+	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
 		return s;
 	if ((s = writeout(fname)) == TRUE) {
 		strcpy(curbp->b_fname, fname);
