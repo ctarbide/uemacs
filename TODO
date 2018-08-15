@@ -67,3 +67,6 @@ Goal:
 
     use #if, #else, #endif as state changing indicator, a finite state machine algo could
     solve this problem.
+
+16. C-X C-F (filefind) should start from the current buffer's file location like gnu emacs do
+
