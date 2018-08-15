@@ -8,6 +8,9 @@
 	!if &or &seq %rctmp "c" &seq %rctmp "h"
 		add-mode "cmode"
 	!endif
+	!if &seq %rctmp "py"
+		4 handle-tab
+	!endif
 !endm
 
 bind-to-key execute-macro-36	M-FNR
