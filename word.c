@@ -430,7 +430,7 @@ int compword(int f, int n)
 	char scomp[NPAT];	/* complete of word  */
 	char stemp[NPAT];	/* temp word  */
 	char *cp;
-	char c;
+	int c;
 	int odot;		/* old dot position  */
 	int i, j, len;
 	int needforw;
@@ -525,7 +525,7 @@ int compword(int f, int n)
 		} while (bp != curbp);
 
 		/* get one more key  */
-		c = get1key();
+		c = getcmd();
 		if (c == abortc) {
 			/* recover the partial word  */
 			do {
@@ -535,7 +535,7 @@ int compword(int f, int n)
 			update(FALSE);
 			return FALSE;
 		}
-		if (c == (META | '/') || c == '/' || c == '[')
+		if (c == (META | '/'))
 			continue;
 		else {
 			execute(c, f, 1);
