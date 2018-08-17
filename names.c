@@ -36,6 +36,7 @@ struct name_bind names[] = {
 	{"change-screen-width", newwidth},
 	{"clear-and-redraw", redraw},
 	{"clear-message-line", clrmes},
+	{"complete-word", compword},
 	{"copy-region", copyregion},
 #if	WORDPRO
 	{"count-words", wordcount},

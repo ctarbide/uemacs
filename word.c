@@ -398,6 +398,153 @@ int inword(void)
 	return FALSE;
 }
 
+/*
+ * Return TRUE if the char at dot is a valid var char.
+ * a-z, A-Z, 0-9, _
+ */
+static int invar(struct line *lp, int doto)
+{
+	int c;
+
+	if (doto == llength(lp))
+		return FALSE;
+	c = lgetc(lp, doto);
+	if (c >= 'a' && c <= 'z')
+		return TRUE;
+	if (c >= 'A' && c <= 'Z')
+		return TRUE;
+	if (c >= '0' && c <= '9')
+		return TRUE;
+	if (c == '_')
+		return TRUE;
+	return FALSE;
+}
+
+/*
+ * auto word completion, bind to M-/
+ * f and n - ignored arguments
+ */
+int compword(int f, int n)
+{
+	char spart[NPAT];	/* part of word  */
+	char scomp[NPAT];	/* complete of word  */
+	char stemp[NPAT];	/* temp word  */
+	char *cp;
+	char c;
+	int odot;		/* old dot position  */
+	int i, j, len;
+	int needforw;
+	int found;
+	struct buffer *bp, *ibp;
+	struct line *lp, *ilp;
+
+	/* view mode, return  */
+	if (curbp->b_mode & MDVIEW)
+		return rdonly();
+
+	/* get the current part */
+	odot = curwp->w_doto;
+	needforw = FALSE;
+	while (curwp->w_doto != 0) {
+		backchar(0, 1);
+		if (!invar(curwp->w_dotp, curwp->w_doto)) {
+			needforw = TRUE;
+			break;
+		}
+	}
+	if (needforw)
+		forwchar(0, 1);
+	cp = spart;
+	for (i=curwp->w_doto; i<odot; i++)
+		*cp++ = lgetc(curwp->w_dotp, i);
+
+	*cp = 0;
+	len = strlen(spart);
+	if (len <= 0)
+		return FALSE;
+	strcpy(scomp, spart);
+	curwp->w_doto = odot;
+
+	/* iterate over buffers and lines to check match  */
+	ibp = curbp;
+	ilp = lforw(curbp->b_linep);
+	for(;;) {
+		found = FALSE;
+		/* check from current buffer  */
+		bp = ibp;
+		do {
+			/* check line by line  */
+			lp = lforw(ilp);
+			while (lp != bp->b_linep) {
+				/* get word by word in current line  */
+				for (i=0; i<=lp->l_used-len; i++) {
+					if (i>0 && invar(lp, i-1))
+						continue;
+					if (strncmp(spart, lp->l_text+i, len))
+						continue;
+					/* match, output the word  */
+					/* if it's the last matching word found, continue  */
+					j = i;
+					cp = stemp;
+					while (j <= lp->l_used) {
+						*cp++ = lp->l_text[j++];
+						if (!invar(lp, j))
+							break;
+					}
+					*cp = 0;
+					if (!strcmp(stemp, scomp))
+						continue;
+					/* everyting's OK, we are inserting a different word  */
+					while (curwp->w_doto != 0) {
+						backdel(FALSE, 1);
+						if (curwp->w_doto == 0)
+							break;
+						if (!invar(curwp->w_dotp, curwp->w_doto-1))
+							break;
+					}
+					linstr(stemp);
+					ibp = bp;
+					ilp = lp;
+					found = TRUE;
+					update(FALSE);
+				}
+				if (found)
+					break;
+				else
+					lp = lforw(lp);
+			}
+
+			if (found)
+				break;
+
+			/* check next buffer  */
+			bp = bp->b_bufp;
+			if (bp == NULL)
+				bp = bheadp;
+			ilp = lforw(bp->b_linep);
+		} while (bp != curbp);
+
+		/* get one more key  */
+		c = get1key();
+		if (c == abortc) {
+			/* recover the partial word  */
+			do {
+				backdel(FALSE, 1);
+			} while (curwp->w_doto != 0 && invar(curwp->w_dotp, curwp->w_doto-1));
+			linstr(spart);
+			update(FALSE);
+			return FALSE;
+		}
+		if (c == (META | '/') || c == '/' || c == '[')
+			continue;
+		else {
+			execute(c, f, 1);
+			return TRUE;
+		}
+	}
+	return TRUE;
+}
+
 #if	WORDPRO
 /*
  * Fill the current paragraph according to the current

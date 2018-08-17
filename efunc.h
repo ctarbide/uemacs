@@ -25,6 +25,7 @@ extern int fillpara(int f, int n);
 extern int justpara(int f, int n);
 extern int killpara(int f, int n);
 extern int wordcount(int f, int n);
+extern int compword(int f, int n);
 
 /* window.c */
 extern int reposition(int f, int n);
