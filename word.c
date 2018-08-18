@@ -437,6 +437,7 @@ int compword(int f, int n)
 	int found;
 	struct buffer *bp, *ibp;
 	struct line *lp, *ilp;
+	int ioff;
 
 	/* view mode, return  */
 	if (curbp->b_mode & MDVIEW)
@@ -465,24 +466,29 @@ int compword(int f, int n)
 	strcpy(scomp, spart);
 	curwp->w_doto = odot;
 
-	/* iterate over buffers and lines to check match  */
 	ibp = curbp;
 	ilp = lforw(curbp->b_linep);
+	ioff = 0;
+	/* iterate over buffers and lines to check match  */
 	for(;;) {
+		/* check from last iterate buffer  */
 		found = FALSE;
-		/* check from current buffer  */
 		bp = ibp;
 		do {
 			/* check line by line  */
-			lp = lforw(ilp);
+			lp = ilp;
 			while (lp != bp->b_linep) {
+				i = ioff;
 				/* get word by word in current line  */
-				for (i=0; i<=lp->l_used-len; i++) {
-					if (i>0 && invar(lp, i-1))
+				while(i <= lp->l_used - len) {
+					if (i>0 && invar(lp, i-1)) {
+						i++;
 						continue;
-					if (strncmp(spart, lp->l_text+i, len))
+					}
+					if (strncmp(spart, lp->l_text+i, len)) {
+						i++;
 						continue;
-					/* match, output the word  */
+					}
 					/* if it's the last matching word found, continue  */
 					j = i;
 					cp = stemp;
@@ -492,8 +498,11 @@ int compword(int f, int n)
 							break;
 					}
 					*cp = 0;
-					if (!strcmp(stemp, scomp))
+					if (!strcmp(stemp, scomp)) {
+						i++;
 						continue;
+					} else
+						strcpy(scomp, stemp);
 					/* everyting's OK, we are inserting a different word  */
 					while (curwp->w_doto != 0) {
 						backdel(FALSE, 1);
@@ -502,16 +511,20 @@ int compword(int f, int n)
 						if (!invar(curwp->w_dotp, curwp->w_doto-1))
 							break;
 					}
-					linstr(stemp);
+					linstr(scomp);
 					ibp = bp;
 					ilp = lp;
+					ioff = i+1;
 					found = TRUE;
 					update(FALSE);
+					break;
 				}
 				if (found)
 					break;
-				else
+				else {
+					ioff = 0;
 					lp = lforw(lp);
+				}
 			}
 
 			if (found)
@@ -522,6 +535,7 @@ int compword(int f, int n)
 			if (bp == NULL)
 				bp = bheadp;
 			ilp = lforw(bp->b_linep);
+			ioff = 0;
 		} while (bp != curbp);
 
 		/* get one more key  */
