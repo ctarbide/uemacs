@@ -1,3 +1,19 @@
++----------------------------------------------------------+
+|							   |
+| Modified Version of uEmacs.				   |
+| 	- compatible key bindings with gnu emacs	   |
+|       - buffer name auto competion 			   |
+|       - word auto completion				   |
+|       ....						   |
+|							   |
+| Basically it's modified so that normal emacs users will  |
+| have no difficulty using it.				   |
+| 							   |
+| The bottom line for modification is small & portibility. |
+|							   |
++----------------------------------------------------------+
+
+
 +---------------+
 | uEmacs/PK 4.0 |
 +---------------+
