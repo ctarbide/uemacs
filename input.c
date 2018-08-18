@@ -534,7 +534,6 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 #if	COMPLC
 		} else if ((c == 0x09 || c == ' ') && quotef == FALSE
 			   && ffile) {
-			debug("/tmp/em-input.log", "file completion\n");
 			/* TAB, complete file name */
 			char ffbuf[255];
 #if	MSDOS
