@@ -431,7 +431,8 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 #endif
 #if	UNIX
 	static char tmp[] = "/tmp/meXXXXXX";
-	FILE *tmpf = NULL;
+	static FILE *tmpf = NULL;
+	int tmpfd;
 #endif
 	ffile = (strncmp(prompt, "Find file: ", 11) == 0
 		 || strncmp(prompt, "View file: ", 11) == 0
@@ -478,7 +479,18 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			/* clear the message line */
 			mlwrite("");
 			TTflush();
-
+#if	UNIX
+			/* close tmp file descriptors */
+			if (tmpf) {
+				tmpfd = fileno(tmpf);
+				if (tmpfd > 2)
+					close(tmpfd);
+				/* the system() call also creates file descriptor */
+				if (tmpfd-1 > 2)
+					close(tmpfd-1);
+				tmpf = NULL;
+			}
+#endif
 			/* if we default the buffer, return FALSE */
 			if (buf[0] == 0)
 				return FALSE;
@@ -493,6 +505,18 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			/* Abort the input? */
 			ctrlg(FALSE, 0);
 			TTflush();
+#if	UNIX
+			/* close tmp file descriptors */
+			if (tmpf) {
+				tmpfd = fileno(tmpf);
+				if (tmpfd > 2)
+					close(tmpfd);
+				/* the system() call also creates file descriptor */
+				if (tmpfd-1 > 2)
+					close(tmpfd-1);
+				tmpf = NULL;
+			}
+#endif
 			return ABORT;
 		} else if ((c == 0x7F || c == 0x08) && quotef == FALSE) {
 			/* rubout/erase */
@@ -570,8 +594,10 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			if (nskip < 0) {
 				buf[ocpos] = 0;
 #if	UNIX
-				if (tmpf != NULL)
+				if (tmpf != NULL) {
 					fclose(tmpf);
+					tmpf = NULL;
+				}
 				strcpy(tmp, "/tmp/meXXXXXX");
 				strcpy(ffbuf, "echo ");
 				strcat(ffbuf, buf);
