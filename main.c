@@ -440,6 +440,7 @@ void edinit(char *bname)
 
 	bp = bfind(bname, TRUE, 0);	/* First buffer         */
 	blistp = bfind("*List*", TRUE, BFINVS);	/* Buffer list buffer   */
+	bnavip = bfind("*Navi*", TRUE, BFINVS);	/* Navigation buffer   */
 	wp = (struct window *)malloc(sizeof(struct window));	/* First window         */
 	if (bp == NULL || wp == NULL || blistp == NULL)
 		exit(1);

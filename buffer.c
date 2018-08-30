@@ -463,14 +463,7 @@ void ltoa(char *buf, int width, long num)
 		buf[--width] = ' ';
 }
 
-/*
- * The argument "text" points to
- * a string. Append this line to the
- * buffer list buffer. Handcraft the EOL
- * on the end. Return TRUE if it worked and
- * FALSE if you ran out of room.
- */
-int addline(char *text)
+int addline_to_buffer(char *text, struct buffer *bp)
 {
 	struct line *lp;
 	int i;
@@ -481,13 +474,25 @@ int addline(char *text)
 		return FALSE;
 	for (i = 0; i < ntext; ++i)
 		lputc(lp, i, text[i]);
-	blistp->b_linep->l_bp->l_fp = lp;	/* Hook onto the end    */
-	lp->l_bp = blistp->b_linep->l_bp;
-	blistp->b_linep->l_bp = lp;
-	lp->l_fp = blistp->b_linep;
-	if (blistp->b_dotp == blistp->b_linep)	/* If "." is at the end */
-		blistp->b_dotp = lp;	/* move it to new line  */
+	bp->b_linep->l_bp->l_fp = lp;	/* Hook onto the end    */
+	lp->l_bp = bp->b_linep->l_bp;
+	bp->b_linep->l_bp = lp;
+	lp->l_fp = bp->b_linep;
+	if (bp->b_dotp == bp->b_linep)	/* If "." is at the end */
+		bp->b_dotp = lp;	/* move it to new line  */
 	return TRUE;
+}
+
+/*
+ * The argument "text" points to
+ * a string. Append this line to the
+ * buffer list buffer. Handcraft the EOL
+ * on the end. Return TRUE if it worked and
+ * FALSE if you ran out of room.
+ */
+int addline(char *text)
+{
+	return addline_to_buffer(text, blistp);
 }
 
 /*

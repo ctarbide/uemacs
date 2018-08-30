@@ -6,7 +6,10 @@
  *	Modified by Petri Kutvonen
  */
 
+#include <unistd.h>
 #include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include "estruct.h"
 #include "edef.h"
@@ -1392,4 +1395,116 @@ int addcomment(int f, int n)
 		return status;
 		
 	return backchar(FALSE, 4);
+}
+
+
+/*
+ * open a navigation buffer and list entries in directory
+ * directory by default is the current files dir; if the current
+ * buffer is not associated with any file, use cwd
+ *
+ * f: FALSE if we don't use the current navi dir stored in bnavip
+ *    TRUE if we use the current navi dir stored in bnavip
+ */
+int navigate(int f, int n)
+{
+	struct window *wp;
+	struct buffer *bp;
+	int s;
+
+	if ((s = makenavi(f)) != TRUE)
+		return s;
+	if (bnavip->b_nwnd == 0) {	/* Not on screen yet.   */
+		if ((wp = wpopup()) == NULL)
+			return FALSE;
+		bp = wp->w_bufp;
+		if (--bp->b_nwnd == 0) {
+			bp->b_dotp = wp->w_dotp;
+			bp->b_doto = wp->w_doto;
+			bp->b_markp = wp->w_markp;
+			bp->b_marko = wp->w_marko;
+		}
+		wp->w_bufp = bnavip;
+		++bnavip->b_nwnd;
+	}
+	wp = wheadp;
+	while (wp != NULL) {
+		if (wp->w_bufp == bnavip) {
+			wp->w_linep = lforw(bnavip->b_linep);
+			wp->w_dotp = lforw(bnavip->b_linep);
+			wp->w_doto = 0;
+			wp->w_markp = NULL;
+			wp->w_marko = 0;
+			wp->w_flag |= WFMODE | WFHARD;
+		}
+		wp = wp->w_wndp;
+	}
+	return TRUE;	
+}
+
+/*
+ * make navigation entries
+ */
+#define MAXLINE	MAXCOL
+int makenavi(int f)
+{
+	char navidir[MAXLINE];
+	char line[MAXLINE];
+	int i, s;
+	DIR *dirp;
+	struct dirent *dentp;
+	struct line *lp;
+	struct stat st;
+	char filepath[NFILEN];
+
+	if (f) {
+		/* use the previous stored navi direcotry  */
+		lp = lforw(bnavip->b_linep);
+		strncpy(navidir, lp->l_text, lp->l_used);
+	} else {
+		/* get the navi dir from current working dir and current buffer's file  */
+		if (getcwd(navidir, MAXLINE) == NULL)
+			return FALSE;
+		strcat(navidir, "/");
+		strcat(navidir, curbp->b_fname);
+		for (i=strlen(navidir)-1; i>0; i--) {
+			if (navidir[i] != '/')
+				navidir[i] = 0;
+			else
+				break;
+		}
+	}
+	
+	bnavip->b_flag &= ~BFCHG;	/* Don't complain!      */
+	if ((s = bclear(bnavip)) != TRUE)	/* Blow old text away   */
+		return s;
+	strcpy(bnavip->b_fname, "");
+
+	/* first line in bnavip is the navi dir  */
+	addline_to_buffer(navidir, bnavip);
+	/* second line the a separator line  */
+	addline_to_buffer("===========================", bnavip);
+	/* then it's . and ..  */
+	addline_to_buffer(".", bnavip);
+	addline_to_buffer("..", bnavip);
+	/* then it's entries in navidir  */
+	if ((dirp = opendir(navidir)) == NULL)
+		return FALSE;
+	while ((dentp = readdir(dirp)) != NULL) {
+		strcpy(line, dentp->d_name);
+		if (!strcmp(line, ".") || !strcmp(line, ".."))
+			continue;
+		/* line is now a file, do nonting; a dir, append '/'; a link, append '@'  */
+		strcpy(filepath, navidir);
+		strcat(filepath, dentp->d_name);
+		if (stat(filepath, &st) < 0)
+			return FALSE;
+		if ((st.st_mode & S_IFMT) == S_IFLNK)
+			strcat(line, "@");
+		if ((st.st_mode & S_IFMT) == S_IFDIR)
+			strcat(line, "/");
+		addline_to_buffer(line, bnavip);
+	}
+	closedir(dirp);
+	return TRUE;
 }

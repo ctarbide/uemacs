@@ -105,6 +105,8 @@ extern int fmatch(int ch);
 extern int istring(int f, int n);
 extern int ovstring(int f, int n);
 extern int addcomment(int f, int n);
+extern int navigate(int f, int n);
+extern int makenavi(int f);
 
 /* main.c */
 extern void edinit(char *bname);
@@ -202,6 +204,7 @@ extern int namebuffer(int f, int n);
 extern int listbuffers(int f, int n);
 extern int makelist(int iflag);
 extern void ltoa(char *buf, int width, long num);
+extern int addline_to_buffer(char *text, struct buffer *bp);
 extern int addline(char *text);
 extern int anycb(void);
 extern int bclear(struct buffer *bp);

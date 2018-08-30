@@ -151,6 +151,7 @@ struct name_bind names[] = {
 	{"move-window-down", mvdnwind},
 	{"move-window-up", mvupwind},
 	{"name-buffer", namebuffer},
+	{"navigate", navigate},
 	{"newline", insert_newline},
 	{"newline-and-indent", indent},
 	{"next-buffer", nextbuffer},
