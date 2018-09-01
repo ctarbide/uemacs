@@ -115,7 +115,7 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{CTLX | CONTROL | 'M', delmode}
 	,
-#if	EMACS_COMPAT
+#if	EMACS_COMPAT && (UNIX || USG)
 	{CTLX | CONTROL | 'N', navigate}
 	,
 #else

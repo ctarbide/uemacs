@@ -105,8 +105,10 @@ extern int fmatch(int ch);
 extern int istring(int f, int n);
 extern int ovstring(int f, int n);
 extern int addcomment(int f, int n);
+#if	EMACS_COMPAT && (UNIX || USG)
 extern int navigate(int f, int n);
 extern int makenavi(int f);
+#endif
 
 /* main.c */
 extern void edinit(char *bname);

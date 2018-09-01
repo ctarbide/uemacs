@@ -101,7 +101,9 @@ struct buffer *curbp;			/* Current buffer               */
 struct window *wheadp;		/* Head of list of windows      */
 struct buffer *bheadp;			/* Head of list of buffers      */
 struct buffer *blistp;			/* Buffer for C-X C-B           */
+#if	EMACS_COMPAT && (UNIX || USG)
 struct buffer *bnavip;			/* BUffer for C-X C-N		  */
+#endif
 
 char sres[NBUFN];		/* current screen resolution    */
 char pat[NPAT];			/* Search pattern               */

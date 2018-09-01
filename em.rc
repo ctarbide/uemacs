@@ -20,5 +20,5 @@ set $tpause 2000000
 
 ;;set $debug "TRUE"
 set %v1 "FOO"
-;;set $fdebug "TRUE"
+set $fdebug "TRUE"
 

@@ -104,7 +104,9 @@ extern struct buffer *curbp;		/* Current buffer               */
 extern struct window *wheadp;                /* Head of list of windows      */
 extern struct buffer *bheadp;		/* Head of list of buffers      */
 extern struct buffer *blistp;		/* Buffer for C-X C-B           */
+#if	EMACS_COMPAT && (UNIX || USG)
 extern struct buffer *bnavip;		/* Buffer for C-X C-N		  */
+#endif
 
 extern char sres[NBUFN];	        /* Current screen resolution.   */
 extern char pat[];		        /* Search pattern.              */
