@@ -507,6 +507,51 @@ int insert_newline(int f, int n)
 		}
 	}
 
+	/* if we are in navi buffer and n == 1, and if we are at some valid line, do special things  */
+	if (curbp == bnavip && n == 1) {
+		if (curwp->w_dotp != lforw(bnavip->b_linep) && curwp->w_dotp != lforw(lforw(bnavip->b_linep))) {
+			/* get the filepath
+			 * if it's directory, do navigate(TRUE, 0) again;
+			 * if it's file, do getfile(fpath, TRUE);
+			 * if it's symbolic link, read it and process like above
+			 */
+			 char fpath[NFILEN];
+			 char fpath_real[NFILEN];
+			 struct line *lp;
+			 struct line *nlp;	/* new line allocated  */
+			 lp = lforw(bnavip->b_linep);
+			 strncpy(fpath, lp->l_text, lp->l_used);
+			 fpath[lp->l_used] = 0;
+			 lp = curwp->w_dotp;
+			 debug("/tmp/em-random.log", "last char of this line: %d\n", lp->l_text[lp->l_used-1]);
+			 if (lp->l_text[lp->l_used-1] == '/') {
+			 	/* directory  */
+			 	strcat(fpath, "/");
+			 	strncat(fpath, lp->l_text, lp->l_used);
+			 	realpath(fpath, fpath_real);
+			 	if (lforw(bnavip->b_linep)->l_size < strlen(fpath_real)) {
+			 		nlp = lalloc(strlen(fpath_real));
+			 		nlp->l_fp = lforw(bnavip->b_linep)->l_bp;
+			 		nlp->l_bp = bnavip->b_linep;
+			 		lfree(lforw(bnavip->b_linep));
+				}
+			 	lforw(bnavip->b_linep)->l_used = strlen(fpath_real);	/* no appending '\0'  */
+			 	debug("/tmp/em-random.log", "fpath_real = %s\n", fpath_real);
+			 	strcpy(lforw(bnavip->b_linep)->l_text, fpath_real);
+			 	return navigate(TRUE, 0);
+			 } else if (lp->l_text[lp->l_used-1] == '@') {
+			 	/* symbolic link  */	
+			 } else {
+			 	/* regular file  */
+			 	debug("/tmp/em-random.log", "getfile %s\n", fpath_real);
+			 	strcat(fpath, "/");
+			 	strncat(fpath, lp->l_text, lp->l_used);
+			 	realpath(fpath, fpath_real);
+			 	return getfile(fpath_real, TRUE);
+			 }
+		}
+	}
+
 	/* if we are in C mode and this is a default <NL> */
 	if (n == 1 && (curbp->b_mode & MDCMOD) &&
 	    curwp->w_dotp != curbp->b_linep)
@@ -1460,7 +1505,7 @@ int makenavi(int f)
 	if (f) {
 		/* use the previous stored navi direcotry  */
 		lp = lforw(bnavip->b_linep);
-		strncpy(navidir, lp->l_text, lp->l_used);
+		strcpy(navidir, lp->l_text);
 	} else {
 		/* get the navi dir from current working dir and current buffer's file  */
 		if (getcwd(navidir, MAXLINE) == NULL)
@@ -1474,28 +1519,39 @@ int makenavi(int f)
 				break;
 		}
 	}
-	
+	debug("/tmp/em-random.log", "navidir = %s\n", navidir);
 	bnavip->b_flag &= ~BFCHG;	/* Don't complain!      */
-	if ((s = bclear(bnavip)) != TRUE)	/* Blow old text away   */
+	if ((s = bclear(bnavip)) != TRUE) {
+		debug("/tmp/em-random.log", "bclear failed\n");
 		return s;
+	}
 	strcpy(bnavip->b_fname, "");
 
 	/* first line in bnavip is the navi dir  */
-	addline_to_buffer(navidir, bnavip);
-	/* second line the a separator line  */
-	addline_to_buffer("===========================", bnavip);
-	/* then it's . and ..  */
-	addline_to_buffer(".", bnavip);
-	addline_to_buffer("..", bnavip);
-	/* then it's entries in navidir  */
-	if ((dirp = opendir(navidir)) == NULL)
+	if (addline_to_buffer(navidir, bnavip) == FALSE) {
+		debug("/tmp/em-random.log", "addline failed\n");
 		return FALSE;
+	}
+	/* second line the a separator line  */
+	for (i=0; i<strlen(navidir); i++)
+		line[i] = '=';
+	line[i] = 0;
+	addline_to_buffer(line, bnavip);
+	/* then it's . and ..  */
+	addline_to_buffer("./", bnavip);
+	addline_to_buffer("../", bnavip);
+	/* then it's entries in navidir  */
+	if ((dirp = opendir(navidir)) == NULL) {
+		debug("/tmp/em-random.log", "opendir %s failed\n", navidir);
+		return FALSE;
+	}
 	while ((dentp = readdir(dirp)) != NULL) {
 		strcpy(line, dentp->d_name);
 		if (!strcmp(line, ".") || !strcmp(line, ".."))
 			continue;
 		/* line is now a file, do nonting; a dir, append '/'; a link, append '@'  */
 		strcpy(filepath, navidir);
+		strcat(filepath, "/");
 		strcat(filepath, dentp->d_name);
 		if (stat(filepath, &st) < 0)
 			return FALSE;
@@ -1506,5 +1562,6 @@ int makenavi(int f)
 		addline_to_buffer(line, bnavip);
 	}
 	closedir(dirp);
+	debug("/tmp/em-random.log", "makenavi for %s ok\n", navidir);
 	return TRUE;
 }

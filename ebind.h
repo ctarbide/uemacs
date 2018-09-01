@@ -115,8 +115,13 @@ struct key_tab keytab[NBINDS] = {
 	,
 	{CTLX | CONTROL | 'M', delmode}
 	,
+#if	EMACS_COMPAT
+	{CTLX | CONTROL | 'N', navigate}
+	,
+#else
 	{CTLX | CONTROL | 'N', mvdnwind}
 	,
+#endif
 	{CTLX | CONTROL | 'O', deblank}
 	,
 	{CTLX | CONTROL | 'P', mvupwind}
