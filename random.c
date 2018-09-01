@@ -1503,10 +1503,14 @@ int makenavi(int f)
 		navidir[lp->l_used] = 0;
 	} else {
 		/* get the navi dir from current working dir and current buffer's file  */
-		if (getcwd(navidir, MAXLINE) == NULL)
-			return FALSE;
-		strcat(navidir, "/");
-		strcat(navidir, curbp->b_fname);
+		if (curbp->b_fname[0] == '/')
+			strcpy(navidir, curbp->b_fname);
+		else {
+			if (getcwd(navidir, MAXLINE) == NULL)
+				return FALSE;
+			strcat(navidir, "/");
+			strcat(navidir, curbp->b_fname);
+		}
 		for (i=strlen(navidir)-1; i>0; i--) {
 			if (navidir[i] != '/')
 				navidir[i] = 0;
