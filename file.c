@@ -183,6 +183,41 @@ static int resetkey(void)
 }
 #endif
 
+static int normfile(char *src, char *dst)
+{
+	char fabs[NFILEN];
+	char cwd[NFILEN];
+
+	if (*src == '/')
+		strcpy(fabs, src);
+	else {
+		if (getcwd(cwd, NFILEN) == NULL)
+			return FALSE;
+		strcpy(fabs, cwd);
+		strcat(fabs, "/");
+		strcat(fabs, src);
+	}
+	if (realpath(fabs, dst) == NULL)
+		return FALSE;
+	return TRUE;
+}
+
+/* if f1 and f2 are the same file  */
+static int samefile(char *f1, char *f2)
+{
+	char f1real[NFILEN];
+	char f2real[NFILEN];
+
+	if (normfile(f1, f1real) == FALSE)
+		return FALSE;
+	if (normfile(f2, f2real) == FALSE)
+		return FALSE;
+	if (strcmp(f1real, f2real) == 0)
+		return TRUE;
+	else
+		return FALSE;
+}
+
 /*
  * getfile()
  *
@@ -202,7 +237,7 @@ int getfile(char *fname, int lockfl)
 #endif
 	for (bp = bheadp; bp != NULL; bp = bp->b_bufp) {
 		if ((bp->b_flag & BFINVS) == 0
-		    && strcmp(bp->b_fname, fname) == 0) {
+		    && samefile(bp->b_fname, fname) == TRUE) {
 			swbuffer(bp);
 			lp = curwp->w_dotp;
 			i = curwp->w_ntrows / 2;
