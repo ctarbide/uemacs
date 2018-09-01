@@ -359,9 +359,8 @@ char *getkill(void)
 int getvar(int f, int n)
 {
 	int status;	/* status return */
-	struct variable_description vd;	/* variable num/type */
 	char var[NVSIZE + 1];	/* name of variable to fetch */
-	char value[NSTRING];	/* value got */
+	char *value;	/* value got */
 
 	/* first get the variable to set.. */
 	if (clexec == FALSE) {
@@ -373,28 +372,23 @@ int getvar(int f, int n)
 		execstr = token(execstr, var, NVSIZE + 1);
 	}
 
-	/* check the legality and find the var */
-	findvar(var, &vd, NVSIZE + 1);
-
-	/* if its not legal....bitch */
-	if (vd.v_type == -1) {
-		mlwrite("%%No such variable as '%s'", var);
-		return FALSE;
-	}
-
 	/* get the value and put it into value[] */
-	switch (vd.v_type) {
+	switch (gettyp(var)) {
 		case TKVAR:	/* get a user variable */
-			strcpy(value, uv[vd.v_num].u_value);
+			value = gtusr(&var[1]);
 			break;
 
 		case TKENV:
 			mlwrite("Getting environment var not supported yet\n");
 			return FALSE;
 	}
-
-	mlwrite("%s = %s", var, value);
-	return TRUE;
+	if (value == errorm) {
+		mlwrite("%%No such variable as '%s'", var);
+		return FALSE;
+	} else {
+		mlwrite("%s = %s", var, value);
+		return TRUE;
+	}
 }
 
 /*
