@@ -1432,7 +1432,7 @@ int addcomment(int f, int n)
 
 	if (!(status = linstr(cstr)))
 		return status;
-		
+
 	return backchar(FALSE, 4);
 }
 
@@ -1478,7 +1478,7 @@ int navigate(int f, int n)
 		}
 		wp = wp->w_wndp;
 	}
-	return TRUE;	
+	return TRUE;
 }
 
 /*
