@@ -890,10 +890,24 @@ int indent(int f, int n)
 				nicol |= tabmask;
 			++nicol;
 		}
-		if (lnewline() == FALSE
-		    || ((i = nicol / 8) != 0 && linsert(i, '\t') == FALSE)
-		    || ((i = nicol % 8) != 0 && linsert(i, ' ') == FALSE))
+		/* respect tabsize which may be set by handle-tab (insert_tab) function  */
+		if (lnewline() == FALSE)
 			return FALSE;
+		if (!tabsize) {
+			if ((i = nicol / 8) != 0 && linsert(i, '\t') == FALSE)
+				return FALSE;
+			if ((i = nicol % 8) != 0 && linsert(i, ' ') == FALSE)
+				return FALSE;
+		} else {
+			i = nicol / tabsize;
+			while (i > 0) {
+				if (insert_tab(FALSE, 1) == FALSE)
+					return FALSE;
+				i--;
+			}
+			if ((i = nicol % tabsize) != 0 && linsert(i, ' ') == FALSE)
+				return FALSE;
+		}
 	}
 	return TRUE;
 }
