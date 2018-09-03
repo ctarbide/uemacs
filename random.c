@@ -10,11 +10,18 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <limits.h>
+#include <stdlib.h>
 
 #include "estruct.h"
 #include "edef.h"
 #include "efunc.h"
 #include "line.h"
+
+/* define PATH_MAX if not available  */
+#ifndef	PATH_MAX
+#define PATH_MAX 4096
+#endif
 
 int tabsize; /* Tab size (0: use real tabs) */
 
@@ -515,9 +522,10 @@ int insert_newline(int f, int n)
 			 * if it's file, do getfile(fpath, TRUE);
 			 */
 			 char fpath[NFILEN];
-			 char fpath_real[NFILEN];
+			 char fpath_real[PATH_MAX];	/* some glibc's realpath require a minimum of PATH_MAX len  */
 			 struct line *lp;
 			 struct line *nlp;	/* new line allocated  */
+			 int len;
 			 lp = lforw(bnavip->b_linep);
 			 strncpy(fpath, lp->l_text, lp->l_used);
 			 fpath[lp->l_used] = 0;
@@ -525,8 +533,12 @@ int insert_newline(int f, int n)
 			 if (lp->l_text[lp->l_used-1] == '/') {
 			 	/* directory  */
 			 	strcat(fpath, "/");
-			 	strncat(fpath, lp->l_text, lp->l_used);
-			 	realpath(fpath, fpath_real);
+			 	len = strlen(fpath);
+			 	strncpy(&fpath[len], lp->l_text, lp->l_used);
+			 	len += lp->l_used;
+			 	fpath[len] = 0;
+			 	if (realpath(fpath, fpath_real) == NULL)
+			 		return FALSE;
 			 	if (lforw(bnavip->b_linep)->l_size < strlen(fpath_real)) {
 			 		nlp = lalloc(strlen(fpath_real));
 			 		nlp->l_fp = lforw(bnavip->b_linep)->l_bp;
@@ -539,8 +551,12 @@ int insert_newline(int f, int n)
 			 } else {
 			 	/* regular file  */
 			 	strcat(fpath, "/");
-			 	strncat(fpath, lp->l_text, lp->l_used);
-			 	realpath(fpath, fpath_real);
+			 	len = strlen(fpath);
+			 	strncpy(&fpath[len], lp->l_text, lp->l_used);
+			 	len += lp->l_used;
+			 	fpath[len] = 0;
+			 	if (realpath(fpath, fpath_real) == NULL)
+			 		return FALSE;
 			 	return getfile(fpath_real, TRUE);
 			 }
 		}
@@ -1520,7 +1536,7 @@ int makenavi(int f)
 		if (curbp->b_fname[0] == '/')
 			strcpy(navidir, curbp->b_fname);
 		else {
-			if (getcwd(navidir, MAXLINE) == NULL)
+			if (getcwd(navidir, NFILEN) == NULL)
 				return FALSE;
 			strcat(navidir, "/");
 			strcat(navidir, curbp->b_fname);
