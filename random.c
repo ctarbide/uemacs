@@ -477,7 +477,7 @@ int insert_newline(int f, int n)
 		if (curwp->w_dotp != lforw(blistp->b_linep) && curwp->w_dotp != lforw(lforw(blistp->b_linep))) {
 			/* get the buffer name in current line */
 			int cpos = 0;
-			char bufn[NSTRING];
+			char bufn[NBUFN];
 			char *tbufp;
 			int c0, c1, c2;
 			while (cpos != llength(curwp->w_dotp)) {
@@ -497,10 +497,10 @@ int insert_newline(int f, int n)
 				c2 = lgetc(curwp->w_dotp, cpos);
 				if (c2 == ' ')
 					break;
+				if (tbufp == &bufn[NBUFN-1])
+					return FALSE;
 				*tbufp++ = c2;
 				cpos++;
-				if (tbufp == &bufn[NSTRING-1])
-					return FALSE;
 			}
 			*tbufp = 0;
 

@@ -434,6 +434,7 @@ int makelist(int iflag)
 		cp2 = &bp->b_bname[0];	/* Buffer name          */
 		while ((c = *cp2++) != 0)
 			*cp1++ = c;
+		*cp1++ = ' ';		/* we use ' ' to determine buffer name in insert_line  */
 		cp2 = &bp->b_fname[0];	/* File name            */
 		if (*cp2 != 0) {
 			while (cp1 < &line[3 + 1 + 5 + 1 + 6 + 4 + NBUFN])
