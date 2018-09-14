@@ -32,7 +32,7 @@ int fileread(int f, int n)
 {
 	int s;
 	char fname[NFILEN];
-	char msg[NSTRING];
+	char msg[NFILEN*2];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
@@ -55,7 +55,7 @@ int insfile(int f, int n)
 {
 	int s;
 	char fname[NFILEN];
-	char msg[NSTRING];
+	char msg[NFILEN*2];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
@@ -110,7 +110,7 @@ int filefind(int f, int n)
 {
 	char fname[NFILEN];	/* file user wishes to find */
 	int s;		/* status return */
-	char msg[NSTRING];
+	char msg[NFILEN*2];	/* enough space for holding fname  */
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
@@ -127,7 +127,7 @@ int viewfile(int f, int n)
 	char fname[NFILEN];	/* file user wishes to find */
 	int s;		/* status return */
 	struct window *wp;	/* scan for windows that need updating */
-	char msg[NSTRING];
+	char msg[NFILEN*2];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
