@@ -827,13 +827,14 @@ int deltspaces(int f, int n)
 	int bc;			/* backchar or not */
 	int odoto;
 	struct line *odotp;
+	int p;
 
 	if (curbp->b_mode & MDVIEW)	/* don't allow this command if      */
 		return rdonly();	/* we are in read only mode     */
 
 	while (curwp->w_doto != 0) {
 		bc = TRUE;
-		for (int p = curwp->w_doto; p <= llength(curwp->w_dotp); p ++) {
+		for (p = curwp->w_doto; p <= llength(curwp->w_dotp); p ++) {
 			c = lgetc(curwp->w_dotp, p-1);
 			if (c != ' ' && c != '\t') {
 				bc = FALSE;
