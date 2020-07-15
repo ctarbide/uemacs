@@ -12,7 +12,7 @@ else
 endif
 export E Q
 
-uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+uname_S := Linux
 
 PROGRAM=em
 
@@ -32,9 +32,9 @@ HDR=ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
 
 # DO NOT ADD OR MODIFY ANY LINES ABOVE THIS -- make source creates them
 
-CC=gcc
+CC?=gcc
 WARNINGS=-Wall -Wstrict-prototypes
-CFLAGS=-O2 $(WARNINGS) -g
+CFLAGS?=-O2 $(WARNINGS) -g
 #CC=c89 +O3			# HP
 #CFLAGS= -D_HPUX_SOURCE -DSYSV
 #CFLAGS=-O4 -DSVR4		# Sun
@@ -54,8 +54,8 @@ LIBS=-lcurses			# SYSV
 #LIBS=-ltermlib
 #LIBS=-L/usr/lib/termcap -ltermcap
 LFLAGS=-hbx
-BINDIR=/usr/bin
-LIBDIR=/usr/lib
+BINDIR=$(DESTDIR)/usr/bin
+LIBDIR=$(DESTDIR)/usr/lib
 
 $(PROGRAM): $(OBJ)
 	$(E) "  LINK    " $@
