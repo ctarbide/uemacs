@@ -858,7 +858,7 @@ int execfile(int f, int n)
 	int status;	/* return status of name query */
 	char fname[NSTRING];	/* name of file to execute */
 	char *fspec;		/* full file spec */
-	char msg[NSTRING];
+	char msg[NSTRING * 2];
 
 	putcbfdir(fname);
 	sprintf(msg, "File to execute: %s", fname);

@@ -472,14 +472,14 @@ int filewrite(int f, int n)
 	struct window *wp;
 	int s;
 	char fname[NFILEN];
-	char msg[NSTRING];
+	char msg[NFILEN * 2];
 
 	if (restflag)		/* don't allow this command if restricted */
 		return resterr();
 
 	putcbfdir(fname);
 	sprintf(msg, "Write file: %s", fname);
-	if ((s = mlreply(msg, fname, NFILEN)) != TRUE)
+	if ((s = mlreply(msg, fname, NFILEN - 1)) != TRUE)
 		return s;
 	if ((s = writeout(fname)) == TRUE) {
 		strcpy(curbp->b_fname, fname);

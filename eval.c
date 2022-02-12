@@ -72,7 +72,6 @@ char *gtfun(char *fname)
 		}
 	}
 
-
 	/* and now evaluate it! */
 	switch (fnum) {
 	case UFADD:
@@ -121,9 +120,11 @@ char *gtfun(char *fname)
 	case UFLENGTH:
 		return itoa(strlen(arg1));
 	case UFUPPER:
-		return mkupper(arg1);
+		strcpy(result, arg1);
+		return mkupper(result);
 	case UFLOWER:
-		return mklower(arg1);
+		strcpy(result, arg1);
+		return mklower(result);
 	case UFTRUTH:
 		return ltos(atoi(arg1) == 42);
 	case UFASCII:
@@ -193,7 +194,9 @@ char *gtusr(char *vname)
 	return errorm;
 }
 
+#if 0
 extern char *getkill(void);
+#endif
 
 /*
  * gtenv()
@@ -287,8 +290,10 @@ char *gtenv(char *vname)
 		return rpat;
 	case EVMATCH:
 		return (patmatch == NULL) ? "" : patmatch;
+#if 0
 	case EVKILL:
 		return getkill();
+#endif
 	case EVCMODE:
 		return itoa(curbp->b_mode);
 	case EVGMODE:
@@ -326,6 +331,7 @@ char *gtenv(char *vname)
 	exit(-12);		/* again, we should never get here */
 }
 
+#if 0
 /*
  * return some of the contents of the kill buffer
  */
@@ -349,6 +355,7 @@ char *getkill(void)
 	/* and return the constructed value */
 	return value;
 }
+#endif
 
 /*
  * get a variable
@@ -381,6 +388,9 @@ int getvar(int f, int n)
 		case TKENV:
 			mlwrite("Getting environment var not supported yet\n");
 			return FALSE;
+		default:
+			fprintf(stderr, "FATAL: %s:%d: exhaustion\n", __FILE__, __LINE__);
+			exit(1);
 	}
 	if (value == errorm) {
 		mlwrite("%%No such variable as '%s'", var);

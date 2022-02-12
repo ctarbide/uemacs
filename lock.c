@@ -10,8 +10,13 @@
 #include "edef.h"
 #include "efunc.h"
 
-#if	BSD | SVR4
+#if defined(__linux__) || defined(BSD) || defined(SVR4)
+
+#if defined(__linux__)
+#include <errno.h>
+#else
 #include <sys/errno.h>
+#endif
 
 static char *lname[NLOCKS];		/* names of all locked files */
 static int numlocks;			/* # of current locks active */

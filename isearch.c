@@ -155,7 +155,8 @@ int isearch(int f, int n)
 	cmd_reexecute = -1;	/* We're not re-executing (yet?)      */
 	cmd_offset = 0;		/* Start at the beginning of the buff */
 	cmd_buff[0] = '\0';	/* Init the command buffer            */
-	strncpy(pat_save, pat, NPAT);	/* Save the old pattern string        */
+	strncpy(pat_save, pat, NPAT-1);	/* Save the old pattern string        */
+	pat_save[NPAT-1] = '\0';
 	curline = curwp->w_dotp;	/* Save the current line pointer      */
 	curoff = curwp->w_doto;	/* Save the current offset            */
 	init_direction = n;	/* Save the initial search direction  */
@@ -234,6 +235,7 @@ int isearch(int f, int n)
 			curwp->w_doto = curoff;	/*  and the offset            */
 			n = init_direction;	/* Reset the search direction */
 			strncpy(pat, pat_save, NPAT);	/* Restore the old search str */
+			pat[NPAT] = '\0';
 			cmd_reexecute = 0;	/* Start the whole mess over  */
 			goto start_over;	/* Let it take care of itself */
 
