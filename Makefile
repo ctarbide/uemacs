@@ -7,19 +7,20 @@ SRC = ansi.c basic.c bind.c buffer.c debug.c display.c eval.c exec.c \
 	file.c fileio.c ibmpc.c input.c isearch.c line.c lock.c main.c \
 	pklock.c posix.c random.c region.c search.c spawn.c tcap.c \
 	termio.c vmsvt.c vt52.c window.c word.c names.c globals.c version.c \
-	usage.c wrapper.c utf8.c util.c
+	usage.c wrapper.c utf8.c util.c alloc.c munix.c misc.c
 
 OBJ = ansi.o basic.o bind.o buffer.o debug.o display.o eval.o exec.o \
 	file.o fileio.o ibmpc.o input.o isearch.o line.o lock.o main.o \
 	pklock.o posix.o random.o region.o search.o spawn.o tcap.o \
 	termio.o vmsvt.o vt52.o window.o word.o names.o globals.o version.o \
-	usage.o wrapper.o utf8.o util.o
+	usage.o wrapper.o utf8.o util.o alloc.o munix.o misc.o
 
 HDR = ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
 
 CC = gcc
 WARNINGS = -Wall -Wstrict-prototypes
 CFLAGS = -O2 $(WARNINGS) -g
+# CFLAGS = -O0 $(WARNINGS) -ggdb3
 #CC = c89 +O3			# HP
 #CFLAGS =  -D_HPUX_SOURCE -DSYSV
 #CFLAGS = -O4 -DSVR4		# Sun
@@ -43,6 +44,13 @@ PREFIX = /usr
 BINDIR = $(PREFIX)/bin
 LIBDIR = $(PREFIX)/lib/uemacs
 
+DEFINES += -DNEED_ICON_RELFILE
+DEFINES += -DNEED_ICON_SALLOC
+
+INSTALL = ./tools/install.sh
+
+all: $(PROGRAM)
+
 $(PROGRAM): $(OBJ)
 	$(CC) $(LDFLAGS) $(DEFINES) -o $@ $(OBJ) $(LIBS)
 
@@ -50,15 +58,10 @@ clean:
 	rm -f $(PROGRAM) core lintout makeout tags makefile.bak *.o
 
 install: $(PROGRAM)
-	mkdir -p $(DESTDIR)$(BINDIR)
-	mkdir -p $(DESTDIR)$(LIBDIR)
-	cp em $(DESTDIR)$(BINDIR)
-	cp emacs.hlp $(DESTDIR)$(LIBDIR)
-	cp emacs.rc $(DESTDIR)$(LIBDIR)/.emacsrc
-	cp em.rc $(DESTDIR)$(LIBDIR)/em.rc
-	chmod 555 $(DESTDIR)$(BINDIR)/em
-	chmod 444 $(DESTDIR)$(LIBDIR)/emacs.hlp
-	chmod 444 $(DESTDIR)$(LIBDIR)/.emacsrc
+	$(INSTALL) -D -m 555 em '$(DESTDIR)$(BINDIR)/em'
+	$(INSTALL) -D -m 444 emacs.hlp '$(DESTDIR)$(LIBDIR)/emacs.hlp'
+	$(INSTALL) -D -m 444 emacs.rc '$(DESTDIR)$(LIBDIR)/.emacsrc'
+	$(INSTALL) -D -m 444 em.rc '$(DESTDIR)$(LIBDIR)/em.rc'
 
 tags:	$(SRC)
 	@rm -f tags

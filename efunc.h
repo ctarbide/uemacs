@@ -377,3 +377,17 @@ extern char *undolock(char *fname);
 /* debug.c */
 /* awkward way for debugging */
 extern void debug(const char *fn, const char *fmt, ...);
+
+/* alloc.c */
+extern char *salloc(char *s);
+
+/* munix.c */
+extern char *relfile(char *prog, char *mod);
+extern char *findexe(char *name, char *buf, size_t len);
+extern char *findonpath(char *name, char *buf, size_t len);
+extern char *followsym(char *name, char *buf, size_t len);
+extern char *canonize(char *path);
+
+/* misc.c */
+extern char *concat(const char *s1, ...);
+extern size_t lconcat(char *dst, size_t dstsize, const char *s1, ...);

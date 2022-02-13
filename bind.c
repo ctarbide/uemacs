@@ -15,6 +15,7 @@
 #include "epath.h"
 #include "line.h"
 #include "util.h"
+#include "version.h"
 
 int help(int f, int n)
 {				/* give me some help!!!!
@@ -476,7 +477,6 @@ int startup(char *sfname)
  */
 char *flook(char *fname, int hflag)
 {
-	char *home;	/* path to home directory */
 	char *path;	/* environmental PATH variable */
 	char *sp;	/* pointer into path spec */
 	int i;		/* index */
@@ -485,7 +485,7 @@ char *flook(char *fname, int hflag)
 #if	ENVFUNC
 
 	if (hflag) {
-		home = getenv("HOME");
+		char *home = getenv("HOME");
 		if (home != NULL) {
 			/* build home dir file spec */
 			strcpy(fspec, home);
@@ -506,6 +506,25 @@ char *flook(char *fname, int hflag)
 		ffclose();
 		return fname;
 	}
+
+	/* search related file */
+	{
+		char *libdir;
+		libdir = relfile(PROGRAM_NAME, "/../../lib/uemacs/");
+		if (libdir != NULL) {
+			if (lconcat(fspec, sizeof(fspec), libdir, fname, NULL) >= sizeof(fspec)) {
+				/* overflow */
+				exit(1);
+			}
+			free(libdir);
+			libdir = NULL;
+			if (ffropen(fspec) == FIOSUC) {
+				ffclose();
+				return fspec;
+			}
+		}
+	}
+
 #if	ENVFUNC
 	/* get the PATH variable */
 	path = getenv("PATH");
@@ -537,8 +556,7 @@ char *flook(char *fname, int hflag)
 	/* look it up via the old table method */
 	for (i = 2; i < ARRAY_SIZE(pathname); i++) {
 		strcpy(fspec, pathname[i]);
-		strcat(fspec, fname);
-
+		strncat(fspec, fname, sizeof(fspec)-1);
 		/* and try it out */
 		if (ffropen(fspec) == FIOSUC) {
 			ffclose();

@@ -1,3 +1,20 @@
+
+This is a fork of uemacs from [1], with many contributions from [2].
+
+The canonical source for this version is https://github.com/ctarbide/uemacs.
+
+All my previous and future changes in this repository, unless explicitly
+stated otherwise in a per-file basis, are dedicated to the public domain.
+
+- [1]: https://github.com/torvalds/uemacs
+
+- [2]: https://github.com/ChenQi1989/uemacs
+
+Original README follows:
+
+
+********************************************************************************
+
 +----------------------------------------------------------+
 |							   |
 | Modified Version of uEmacs.				   |
