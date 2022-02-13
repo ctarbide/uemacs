@@ -122,10 +122,6 @@ int main(int argc, char **argv)
 	int saveflag;		/* temp store for lastflag */
 	int errflag;		/* C error processing? */
 	char bname[NBUFN];	/* buffer name of file to read */
-#if	CRYPT
-	int cryptflag;		/* encrypting on the way in? */
-	char ekey[NPAT];	/* startup encryption key */
-#endif
 	int newc;
 
 #if	PKCODE & VMS
@@ -162,9 +158,6 @@ int main(int argc, char **argv)
 	firstfile = TRUE;	/* no file to edit yet */
 	startflag = FALSE;	/* startup file not executed yet */
 	errflag = FALSE;	/* not doing C error parsing */
-#if	CRYPT
-	cryptflag = FALSE;	/* no encryption by default */
-#endif
 
 	/* Parse the command line */
 	for (carg = 1; carg < argc; ++carg) {
@@ -191,13 +184,6 @@ int main(int argc, char **argv)
 				gotoflag = TRUE;
 				gline = atoi(&argv[carg][2]);
 				break;
-#if	CRYPT
-			case 'k':	/* -k<key> for code key */
-			case 'K':
-				cryptflag = TRUE;
-				strcpy(ekey, &argv[carg][2]);
-				break;
-#endif
 #if	PKCODE
 			case 'n':	/* -n accept null chars */
 			case 'N':
@@ -249,14 +235,6 @@ int main(int argc, char **argv)
 			/* set the modes appropriatly */
 			if (viewflag)
 				bp->b_mode |= MDVIEW;
-#if	CRYPT
-			if (cryptflag) {
-				bp->b_mode |= MDCRYPT;
-				myencrypt((char *) NULL, 0);
-				myencrypt(ekey, strlen(ekey));
-				strncpy(bp->b_key, ekey, NPAT);
-			}
-#endif
 		}
 	}
 

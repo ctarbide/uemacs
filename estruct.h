@@ -151,7 +151,6 @@
 #define	ISRCH	1  /* Incremental searches like ITS EMACS          */
 #define	WORDPRO	1  /* Advanced word processing features            */
 #define	APROP	1  /* Add code for Apropos command                 */
-/*#define	CRYPT	1*/  /* file encryption enabled?                     */
 #define MAGIC	1  /* include regular expression matching?         */
 #define	AEDIT	1  /* advanced editing options: en/detabbing       */
 #define	PROC	1  /* named procedures                             */
@@ -476,9 +475,6 @@ struct buffer {
 	char b_flag;		/* Flags                        */
 	char b_fname[NFILEN];	/* File name                    */
 	char b_bname[NBUFN];	/* Buffer name                  */
-#if	CRYPT
-	char b_key[NPAT];	/* current encrypted key        */
-#endif
 };
 
 #define BFINVS  0x01		/* Internal invisable buffer    */
@@ -486,7 +482,7 @@ struct buffer {
 #define	BFTRUNC	0x04		/* buffer was truncated when read */
 
 /*	mode flags	*/
-#define	NUMMODES	10	/* # of defined modes           */
+#define	NUMMODES	9	/* # of defined modes           */
 
 #define	MDWRAP	0x0001		/* word wrap                    */
 #define	MDCMOD	0x0002		/* C indentation and fence match */
@@ -495,8 +491,7 @@ struct buffer {
 #define	MDVIEW	0x0010		/* read-only buffer             */
 #define MDOVER	0x0020		/* overwrite mode               */
 #define MDMAGIC	0x0040		/* regular expresions in search */
-/* #define	MDCRYPT	0x0080*/		/* encrytion mode active        */
-#define	MDASAVE	0x0100		/* auto-save mode               */
+#define	MDASAVE	0x0080		/* auto-save mode               */
 
 /*
  * The starting position of a region, and the size of the region in
